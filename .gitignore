@@ -32,3 +32,6 @@ _tools/download_state.json
 _tools/dashboard/pilot_runs.jsonl
 _tools/dashboard/data.js
 _tools/dashboard/current.mp4
+
+# 向导调试残留（占位符目录，永不入库）
+{{*}}/
