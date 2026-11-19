@@ -1,0 +1,4 @@
+[
+ {"shot_id":"S01","voice":"小欧","text":"第一条测试，验证批量路径在重构后依然正常。","out":"outputs/_bt1.wav"},
+ {"shot_id":"S02","voice":"小欧","text_file":"long_text2.txt","out":"outputs/_bt2.wav","chunk_chars":300}
+]

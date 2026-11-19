@@ -1,0 +1,1044 @@
+[
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\001_国庆归家惊变，我撕碎五年错付婚姻-第1集.mp4",
+    "basic": {
+      "duration": 50.55,
+      "bitrate": 4559750,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 24.7,
+      "silence_ratio": 0.081,
+      "avg_db": -28.8
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 87,
+      "excerpt": "国庆回家，我好心烧了个在雨中拦车的孕妇，后来我才知道她肚子里的孩子是我丈夫，要命求你载我一程吧，我等了一个小时都没人愿意载我上车停下你停下那个像是孕妇是不是事年",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 24.7dB、静音占比 8%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 50.55s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\002_国庆归家惊变，我撕碎五年错付婚姻-第2集.mp4",
+    "basic": {
+      "duration": 67.8,
+      "bitrate": 4564476,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 20.4,
+      "silence_ratio": 0.024,
+      "avg_db": -24.8
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 167,
+      "excerpt": "车里有毛巾，你擦一下吧，不用了，姐姐拿着吧，别冻坏了。上车吧，谢谢谢谢姐，姐姐你对陌生人都这么好？谁都有遇到难处的时候，我在厂里加班国庆别回来了我也见不了你赵明",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 20.4dB、静音占比 2%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 67.8s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\003_国庆归家惊变，我撕碎五年错付婚姻-第3集.mp4",
+    "basic": {
+      "duration": 62.86,
+      "bitrate": 4562948,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 19.6,
+      "silence_ratio": 0.014,
+      "avg_db": -23.9
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 284,
+      "excerpt": "谢谢姐姐，要不是遇见你，我真不知道还要等多久。你老公呢，她工作忙，临时走不开，我手机也快没电了，打不到车，我都急死了。男孩女孩是个男孩闹腾得很，但我老公平时把我",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 19.6dB、静音占比 1%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 62.86s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\004_国庆归家惊变，我撕碎五年错付婚姻-第4集.mp4",
+    "basic": {
+      "duration": 53.34,
+      "bitrate": 4561565,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 22.8,
+      "silence_ratio": 0.022,
+      "avg_db": -26.7
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 156,
+      "excerpt": "你这块表是星海系列啊，姐姐也认识我刚给我老公买了同系列的男款，这系列是情侣表，镇上应该没几个人带你老公送的嗯，其实我还没结婚，但是她说等孩子出生，就带着另一块表",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 22.8dB、静音占比 2%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 53.34s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\005_国庆归家惊变，我撕碎五年错付婚姻-第5集.mp4",
+    "basic": {
+      "duration": 56.54,
+      "bitrate": 4561688,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 20.9,
+      "silence_ratio": 0.015,
+      "avg_db": -28.7
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 92,
+      "excerpt": "几单元二单元这么巧，姐姐，你不会也住这栋吧。嗯，我也住这栋。玲姐，他来接我了。嗯，你慢点，下次别再做事这么莽撞了。知道了，谢谢玲姐，这人看起来怎么这么像赵明，前",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 20.9dB、静音占比 2%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 56.54s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\006_国庆归家惊变，我撕碎五年错付婚姻-第6集.mp4",
+    "basic": {
+      "duration": 41.32,
+      "bitrate": 4560557,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 25.1,
+      "silence_ratio": 0.022,
+      "avg_db": -27.4
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [
+        "没想到"
+      ],
+      "chars": 71,
+      "excerpt": "林威，你在想什么？赵明在厂里加班呢？我和赵明还没有孩子啊。妍妍回来就好，可把我们担心坏了，赵明，你是真没想到我会回来，还是根本没把我当回事，。",
+      "detail": "未检出旁白话术（强0 弱1）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱1）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 25.1dB、静音占比 2%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 41.32s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\007_国庆归家惊变，我撕碎五年错付婚姻-第7集.mp4",
+    "basic": {
+      "duration": 71.01,
+      "bitrate": 4564470,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 21.9,
+      "silence_ratio": 0.005,
+      "avg_db": -24.4
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 49,
+      "excerpt": "妍快喝口热乎的鸡汤。明这么大的雨，你也不去接一下在家里加一已经分居？赵把东西放下别在门口忘了淋着。",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 21.9dB、静音占比 0%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 71.01s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\008_国庆归家惊变，我撕碎五年错付婚姻-第8集.mp4",
+    "basic": {
+      "duration": 68.01,
+      "bitrate": 4563884,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 26.7,
+      "silence_ratio": 0.053,
+      "avg_db": -27.2
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 180,
+      "excerpt": "我身体好，妈，去年我发烧39度给你儿子打电话，他说在加班。林那天晚上我一个人打车去的医院，你你是明哥的妻子，这个问题你该问他哼你坐好，别动了胎气。孩子是你的是妍",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 26.7dB、静音占比 5%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 68.01s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\009_国庆归家惊变，我撕碎五年错付婚姻-第9集.mp4",
+    "basic": {
+      "duration": 60.0,
+      "bitrate": 4563708,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 22.7,
+      "silence_ratio": 0.018,
+      "avg_db": -25.7
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 155,
+      "excerpt": "连我的卧室都霸占了吗？谁让他住主卧的？一个孩子爸爸，一个孩子妈妈不住主卧住哪里？你一年回来几次，站着也是浪费，这房子的首付是我出的因为非要在今天谈钱吗？明哥，我",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 22.7dB、静音占比 2%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 60.0s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\010_国庆归家惊变，我撕碎五年错付婚姻-第10集.mp4",
+    "basic": {
+      "duration": 68.41,
+      "bitrate": 4564293,
+      "width": 1080,
+      "height": 1922,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 23.7,
+      "silence_ratio": 0.007,
+      "avg_db": -24.6
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 24,
+      "excerpt": "赵明进书房在这里说，后一什开始的去了同意了月给？",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 23.7dB、静音占比 1%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 68.41s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\011_国庆归家惊变，我撕碎五年错付婚姻-第11集.mp4",
+    "basic": {
+      "duration": 58.12,
+      "bitrate": 4563557,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 22.4,
+      "silence_ratio": 0.012,
+      "avg_db": -22.4
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 52,
+      "excerpt": "别说的这么难听，素没花你多少钱，他住的房子首付是谁出的？我们是夫妻非分么孕搬去我的家来滚回哪去工人逼舍。",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 22.4dB、静音占比 1%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 58.12s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\012_国庆归家惊变，我撕碎五年错付婚姻-第12集.mp4",
+    "basic": {
+      "duration": 59.68,
+      "bitrate": 4563788,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 33.0,
+      "silence_ratio": 0.136,
+      "avg_db": -26.8
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 42,
+      "excerpt": "夫妻过日子，男人犯点错很正常，肚子里可是赵家的长孙，你别逼我们，意思离婆考虑同意了。",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 33.0dB、静音占比 14%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 59.68s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\013_国庆归家惊变，我撕碎五年错付婚姻-第13集.mp4",
+    "basic": {
+      "duration": 64.12,
+      "bitrate": 4564252,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 29.6,
+      "silence_ratio": 0.087,
+      "avg_db": -26.5
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 192,
+      "excerpt": "没事儿，这么大的事儿，总得给我一点时间，这才像懂事的媳妇，放心，你们给我的我一定加倍还回去，想通就好，妍妍产检要用钱，你先转2万。姐不用了，我自己有钱，你怀的是",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 29.6dB、静音占比 9%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 64.12s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\014_国庆归家惊变，我撕碎五年错付婚姻-第14集.mp4",
+    "basic": {
+      "duration": 69.34,
+      "bitrate": 4563734,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 27.2,
+      "silence_ratio": 0.03,
+      "avg_db": -26.4
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 35,
+      "excerpt": "陈律师抱歉这么晚打扰准抵共有首账抵贷款5空不是早就被空了。李威还没睡。",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 27.2dB、静音占比 3%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 69.34s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\015_国庆归家惊变，我撕碎五年错付婚姻-第15集.mp4",
+    "basic": {
+      "duration": 56.29,
+      "bitrate": 4562887,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 30.4,
+      "silence_ratio": 0.132,
+      "avg_db": -28.3
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 33,
+      "excerpt": "公司临时周转，我查查账户余额查那个什么要付总5放先睡你现在方便吗？",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 30.4dB、静音占比 13%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 56.29s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\016_国庆归家惊变，我撕碎五年错付婚姻-第16集.mp4",
+    "basic": {
+      "duration": 66.34,
+      "bitrate": 4563150,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 32.7,
+      "silence_ratio": 0.13,
+      "avg_db": -26.3
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 195,
+      "excerpt": "这笔钱他骗爸妈说是投进厂里的嫂子，我哥骗你的不止这些。明早9点镇口咖啡厅这30万是我爸妈的养老钱，我给他的，面上备注的项目投资。你怎么拿到的，我妈不会用手机银行",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 32.7dB、静音占比 13%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 66.34s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\017_国庆归家惊变，我撕碎五年错付婚姻-第17集.mp4",
+    "basic": {
+      "duration": 49.34,
+      "bitrate": 4560261,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 23.0,
+      "silence_ratio": 0.003,
+      "avg_db": -22.7
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 185,
+      "excerpt": "我哥出轨，他们说男人都会犯错，苏妍怀个儿子，他们就敢拿我的钱给他买房，可我也是他们生的，凭什么活该被牺牲，所以你想报复赵明，我想拿回属于我的东西，家里缺钱都是你",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 23.0dB、静音占比 0%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 49.34s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\018_国庆归家惊变，我撕碎五年错付婚姻-第18集.mp4",
+    "basic": {
+      "duration": 59.28,
+      "bitrate": 4563648,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 31.7,
+      "silence_ratio": 0.108,
+      "avg_db": -25.3
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 240,
+      "excerpt": "蓝色文件袋里面有抵押申请，还有你的身份证复印件，他还练过你的签名，废纸塞在书房打印机下面，你能拿到原件吗？拿走会惊动他，我可以拍照，爸妈手机里的聊天记录，老家产",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 31.7dB、静音占比 11%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 59.28s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\019_国庆归家惊变，我撕碎五年错付婚姻-第19集.mp4",
+    "basic": {
+      "duration": 47.21,
+      "bitrate": 4561249,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 23.6,
+      "silence_ratio": 0.037,
+      "avg_db": -22.7
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 143,
+      "excerpt": "来不及慢慢查了，我昨晚听见我哥打电话，他要把苏颜包装成项目合作方，合同都做好了哪笔钱你们共同共同经营账户里最后那30万，今天中午提交三天后才会进苏妍账户，嫂子来",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 23.6dB、静音占比 4%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 47.21s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  },
+  {
+    "path": "D:\\BaiduNetdiskDownload\\国庆归家惊变，我撕碎五年错付婚姻 卡点6\\020_国庆归家惊变，我撕碎五年错付婚姻-第20集.mp4",
+    "basic": {
+      "duration": 48.21,
+      "bitrate": 4561562,
+      "width": 1080,
+      "height": 1920,
+      "has_audio": true,
+      "has_subtitle_stream": false
+    },
+    "audio": {
+      "available": true,
+      "dynamic_range_db": 31.5,
+      "silence_ratio": 0.122,
+      "avg_db": -27.2
+    },
+    "narration_text": {
+      "checked": true,
+      "hit": false,
+      "strong": [],
+      "weak": [],
+      "chars": 194,
+      "excerpt": "家庭账户有一笔30万元的转账申请，我要立刻撤销这笔钱转往一个合作账户，目前还在等待授权，您确定拒绝吗？确定再取消赵明的操作权限，以后所有大额转账必须由我本人到场",
+      "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+    },
+    "frame_template": {
+      "checked": false,
+      "reason": "无 evidence，跳过"
+    },
+    "signals": [
+      {
+        "name": "narration_text",
+        "hit": false,
+        "detail": "未检出旁白话术（强0 弱0）→ 角色对白/自述，符合原片"
+      },
+      {
+        "name": "audio_stats",
+        "hit": false,
+        "detail": "动态范围 31.5dB、静音占比 12%（短剧原片同样全程有声，此项不参与判定）"
+      },
+      {
+        "name": "too_short",
+        "hit": false,
+        "detail": "时长 48.21s（短剧单集 60~180s 属正常）"
+      }
+    ],
+    "hit_count": 0,
+    "verdict": "疑似原片",
+    "can_extract_original_audio": true,
+    "can_restore_true_plot": true,
+    "usable_as": "原片素材"
+  }
+]

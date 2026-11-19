@@ -1,0 +1,744 @@
+{
+ "ts": "2026-11-09 07:57:43",
+ "episodes_scanned": 51,
+ "verdict_distribution": {
+  "C": 38,
+  "B": 11,
+  "REJECT": 2
+ },
+ "hard_failures": [
+  {
+   "issue": "douyin_file_over_#mb:#",
+   "count": 2
+  },
+  {
+   "issue": "line_too_long:#:#:#>#",
+   "count": 1
+  }
+ ],
+ "recurring_risks": [
+  {
+   "risk": "soft/semantic 未打分：missing",
+   "count": 39,
+   "candidate_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "risk": "soft/speech 未打分：files_missing",
+   "count": 39,
+   "candidate_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "risk": "未打分软门: soft/semantic",
+   "count": 39,
+   "candidate_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "risk": "未打分软门: soft/speech",
+   "count": 39,
+   "candidate_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "risk": "soft/speech 尚未完成合成解说校准（CER #）；必须人工回听",
+   "count": 12,
+   "candidate_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  }
+ ],
+ "pitfall_candidates": [
+  {
+   "title": "soft/semantic 未打分：missing",
+   "occurrences": 39,
+   "evidence": [
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B1\\八零小福包-B1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B2\\八零小福包-B2.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B3\\八零小福包-B3.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\cbs-e2e\\out\\C1-v37\\长白山志异-C1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\dyg-e2e\\out\\D1\\胆小鬼-D1.qc.json"
+   ],
+   "suggested_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "title": "soft/speech 未打分：files_missing",
+   "occurrences": 39,
+   "evidence": [
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B1\\八零小福包-B1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B2\\八零小福包-B2.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\blxf-e2e\\out\\B3\\八零小福包-B3.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\cbs-e2e\\out\\C1-v37\\长白山志异-C1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\dyg-e2e\\out\\D1\\胆小鬼-D1.qc.json"
+   ],
+   "suggested_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "title": "未打分软门: soft/semantic",
+   "occurrences": 39,
+   "evidence": [],
+   "suggested_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "title": "未打分软门: soft/speech",
+   "occurrences": 39,
+   "evidence": [],
+   "suggested_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  },
+  {
+   "title": "soft/speech 尚未完成合成解说校准（CER #）；必须人工回听",
+   "occurrences": 12,
+   "evidence": [
+    "D:\\剧里剧外\\视频解说\\任务\\dzg-e2e\\out\\K1\\带崽-K1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\dzg-e2e\\out\\K2\\带崽-K2.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\lcnc-e2e\\out\\LC1\\厨娘-LC1.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\lcnc-e2e\\out\\LC2\\厨娘-LC2.qc.json",
+    "D:\\剧里剧外\\视频解说\\任务\\lcnc-e2e\\out\\LC3\\厨娘-LC3.qc.json"
+   ],
+   "suggested_judgement": "同类问题反复出现，应抽成单一判据/脚本并记入坑典"
+  }
+ ],
+ "rework_suggestions": [
+  {
+   "prefix": "B1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "B2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "B3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "C1-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "K1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "K2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "F1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F1-v36",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F1-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F2-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "F3-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "LC1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "LC2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "LC3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "MW1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "MW2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "MW3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "M1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "M2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "M3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "hard_failures=1"
+  },
+  {
+   "prefix": "K1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "K2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "K3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "T1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "T2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "T3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "T1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "T2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=1"
+  },
+  {
+   "prefix": "H1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "H2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "H3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "hard_failures=2"
+  },
+  {
+   "prefix": "G1-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X1-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X2-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X3-v37",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "X1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "Y1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "Y2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "Y3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D1",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D2",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  },
+  {
+   "prefix": "D3",
+   "max_rounds": 3,
+   "strategies": [
+    "reseed_tts",
+    "rewrite_sentence",
+    "shorten_sentence",
+    "replace_evidence_window",
+    "switch_soul"
+   ],
+   "reason": "risks=2"
+  }
+ ],
+ "eval_trend": {
+  "runs": 13,
+  "common_ids": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21",
+   "22"
+  ],
+  "flipped_ids": [
+   21,
+   22
+  ],
+  "last_pass_rate": 0.955,
+  "note": "flipped_ids 为空 = 同口径下无回归"
+ },
+ "note": "本报告只作改进输入；坑典条目须经人工/Agent 复核后写入 references/00-pitfalls.md"
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "shot_id": "S01",
+    "voice": "小欧",
+    "text": "第一条，批量不写引擎字段的测试。",
+    "out": "outputs/batchtest_S01.wav"
+  },
+  {
+    "shot_id": "S02",
+    "voice": "小欧",
+    "text": "第二条，验证是否自动走默认引擎。",
+    "out": "outputs/batchtest_S02.wav"
+  }
+]

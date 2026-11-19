@@ -1,0 +1,451 @@
+{
+  "schema_version": "2.0",
+  "engine": "剧里剧外-视频解说引擎",
+  "engine_version": "7.1.0",
+  "_engine_version_note": "★ 配置 schema 快照，不是版本源。版本唯一源 = SKILL.md frontmatter metadata.skill_version（pipeline.py 启动时读取）。改版本只改 SKILL.md 后同步此字段。",
+  "_note": "本配置是能力边界的唯一正典。preflight 阈值只适用于原片音频；合成解说必须使用独立 narration_qc 配置与校准状态。",
+  "runtime": {
+    "ffmpeg": "{{FFMPEG}}",
+    "ffprobe": "{{FFPROBE}}",
+    "font": "{{FONT}}",
+    "asr_python": "{{ASR_PYTHON}}",
+    "tts_python": "{{TTS_PYTHON}}",
+    "tts_dub_script": "{{DUB_SCRIPT}}",
+    "tts_root": "{{TTS_ROOT}}",
+    "llama_server": "{{LLAMA_SERVER}}",
+    "vlm_model": "{{VLM_MODEL}}",
+    "mmproj": "{{MMPROJ}}",
+    "vlm_endpoint": "http://127.0.0.1:18088",
+    "vlm_context": 8192
+  },
+  "asr": {
+    "_note": "primary 为实测最优项。SenseVoice 已于 2026-10-08 实测接入，tiny 保留为最后保底。",
+    "primary": {
+      "engine": "sensevoice",
+      "model": "iic/SenseVoiceSmall",
+      "runtime": "tts_python",
+      "device": "cuda:0",
+      "status": "verified",
+      "measured_at": "2026-10-08",
+      "measured_avg_cer": 0.03,
+      "measured_rtf_gpu": 0.0201,
+      "measured_detail": "真实短剧素材 30s 抽取转写，人工核对正确；同段 tiny CER=0.2024（约 80% 字错）",
+      "note": "首次加载约 3-4 分钟（893MB 权重），缓存后 3.5s；measured_avg_cer 为人工核对的保守估计，非大规模语料统计值"
+    },
+    "fallback": [
+      {
+        "engine": "whisper",
+        "model": "faster-whisper-medium",
+        "model_dir": "{{WHISPER_MEDIUM_DIR}}",
+        "required_file": "model.bin",
+        "runtime": "asr_python",
+        "device": "cpu",
+        "status": "verified",
+        "note": "2026-10-16 经 hf-mirror.com 镜像下载完成，sha256 与官方 LFS OID 一致。fetch_asr.py 已改为真 Range 续传（旧的 ab 追加会重复写入 58MB）。",
+        "verified_at": "2026-10-16",
+        "bytes": 1527906378,
+        "sha256": "9b45e1009dcc4ab601eff815b61d80e60ce3fd8c74c1a14f4a282258286b51ae",
+        "measured_avg_cer": 0.0726,
+        "measured_avg_cer_homophone_tolerant": 0.0242,
+        "measured_rtf_cpu": 0.8866,
+        "measured_load_sec": 3.6,
+        "measured_at": "2026-10-16",
+        "measured_detail": "取《返乡那天我家成了怪谈》第1集 29.6-61.3s 共 31.7s 语段，与影片硬字幕逐卡人工核对（帧证据 g1-e2e/ref0-2.jpg、chk0-1.jpg），规范化 Levenshtein：严格 CER 9/124=0.0726；同音宽容（的/得、词/辞、奇/琪、屋/吴、他/它、彦/砚 视为等价）3/124=0.0242。差异集中在片名与姓名（老屋→老吴、砚舟→彦舟/点粥）。原始记录 g1-e2e/cer_medium.json。",
+        "usable_for_raw_cut": true
+      },
+      {
+        "engine": "whisper",
+        "model": "faster-whisper-tiny",
+        "model_dir": "{{WHISPER_TINY_DIR}}",
+        "required_file": "model.bin",
+        "runtime": "asr_python",
+        "device": "cpu",
+        "status": "ready_but_unusable",
+        "measured_avg_cer": 0.963,
+        "measured_rtf_cpu": 0.0596,
+        "verdict": "last_resort_only",
+        "note": "中文不可用；仅当 SenseVoice 与 medium 均不可用时启用，且引擎降级为 degraded"
+      }
+    ],
+    "model_root": "{{MODEL_ROOT}}",
+    "device": "cpu",
+    "compute_type": "int8",
+    "language": "zh",
+    "beam_size": 5,
+    "word_timestamps": true,
+    "vad": {
+      "enabled": true,
+      "merge_length_s": 15
+    },
+    "_baseline_measured_at": "2026-10-08",
+    "_baseline_method": "真实短剧素材抽 30s 转写 + 人工核对 + 规范化 Levenshtein CER",
+    "quality_gate": {
+      "_note": "只用于原片对白 ASR 能力判断，不可复用作合成解说的语音门阈值。",
+      "mode": "adaptive",
+      "slack": 0.03,
+      "max_avg_cer_for_production": 0.35,
+      "hard_floor_avg_cer": 0.15,
+      "on_below_hard_floor": "refuse_production_and_report",
+      "on_between": "soft_gate_only_flag_and_continue",
+      "on_unusable": "refuse_production_and_report"
+    },
+    "narration_qc": {
+      "_note": "合成解说回读专用。候选模型已在 3 份同音色真实成片上比较，但样本集中于同一集且未完成人工逐句核听，未校准前绝不自动判通过。",
+      "engine": "whisper",
+      "model": "faster-whisper-medium",
+      "model_dir": "{{WHISPER_MEDIUM_DIR}}",
+      "required_file": "model.bin",
+      "runtime": "asr_python",
+      "device": "cpu",
+      "enabled_for_scoring": true,
+      "status": "provisional",
+      "max_cer": null,
+      "allow_auto_pass": false,
+      "candidate_evidence": {
+        "voice": "谭湘文徐浩伦",
+        "paired_real_outputs": 3,
+        "source_scope": "山藏万象 EP01；两份较长桥接稿、一份自动 30 秒稿",
+        "final_mix_weighted_cer": 0.0599,
+        "final_mix_worst_cer": 0.097,
+        "tts_only_weighted_cer": 0.0616,
+        "tts_only_worst_cer": 0.1269,
+        "interpretation": "仅用于选择候选回读模型；样本不足以设定自动放行阈值"
+      }
+    },
+    "narrative_transcript": {
+      "_note": "S1 uses a second verified ASR only to detect sparse or conflicting primary transcripts and retain timing; thresholds are source-level completeness checks, not claims of CER.",
+      "min_primary_cjk_per_second": 0.75,
+      "min_timed_cjk_chars": 32,
+      "min_timed_segments": 3,
+      "min_segment_avg_logprob": -1.2,
+      "max_segment_no_speech_prob": 0.6,
+      "richer_transcript_ratio": 1.8,
+      "min_agreement_for_timing_attachment": 0.65
+    },
+    "normalization": {
+      "_note": "实测 tiny 输出繁体（'彩色条纹' → '財色調文'），不规范化会虚高 CER；SenseVoice 输出简体但带 <|zh|><|HAPPY|> 标记，也须剥离。",
+      "strip_model_tags": true,
+      "traditional_to_simplified": true,
+      "fullwidth_to_halfwidth": true,
+      "strip_punctuation": true,
+      "casefold": true,
+      "keep_cjk_digits_latin": true
+    }
+  },
+  "tts": {
+    "engine": "dots-tts-mf",
+    "model": "{{TTS_MODEL}}",
+    "default_reference": "{{TTS_VOICE_REF}}",
+    "sample_rate": 24000,
+    "_note": "实测时长是唯一时间基准，禁止按字数估算时长（旧技能 E4 铁律，保留）"
+  },
+  "script_quality": {
+    "_note": "配音按句分段合成；15 字是当前短剧样本的提示目标，短句比例只作诊断，不得为了变长而跨证据合并。",
+    "target_chars_per_tts_segment": 15,
+    "short_story_line_max_chars": 12,
+    "max_short_story_line_ratio": 0.4
+  },
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "video_codec": "libx264",
+    "crf": 20,
+    "preset": "medium",
+    "audio_codec": "aac",
+    "audio_bitrate": "192k",
+    "target_lufs": -14.0,
+    "loudness_tolerance": 2.0,
+    "true_peak": -1.5
+  },
+  "platform_profiles": {
+    "_note": "画幅/安全区/字幕按平台分档；**成片时长全平台统一 60–300s**（duration_policy 为唯一数值源）。",
+    "douyin": {
+      "aspect": "9:16",
+      "duration": [
+        60.0,
+        300.0
+      ],
+      "min_height": 1080,
+      "safe_top": 0.12,
+      "safe_bottom": 0.18,
+      "subtitle_max_lines": 2,
+      "chars_per_line": 13,
+      "duration_note": "成片须严格 > 60s 且 < 300s（用户 2026-11-04 令，1–5 分钟）。数值正典 = duration_policy.bounds；超限质检 REJECT。",
+      "max_file_mb": 128,
+      "max_file_mb_note": "抖音成片体积上限（2026-11-03 实踩：H3 372s 用固定 crf22 出片 135MB → 质检 hard/technical FAIL）。build.py 据此按时长反算码率上限。"
+    },
+    "kuaishou": {
+      "aspect": "9:16",
+      "duration": [
+        60,
+        300
+      ],
+      "min_height": 1080,
+      "safe_top": 0.12,
+      "safe_bottom": 0.18,
+      "subtitle_max_lines": 2,
+      "chars_per_line": 14,
+      "duration_note": "成片须严格 > 60s 且 < 300s（用户 2026-11-04 令，1–5 分钟）。数值正典 = duration_policy.bounds；超限质检 REJECT。"
+    },
+    "wechat_channels": {
+      "aspect": "9:16",
+      "duration": [
+        60,
+        300
+      ],
+      "min_height": 1080,
+      "safe_top": 0.1,
+      "safe_bottom": 0.16,
+      "subtitle_max_lines": 2,
+      "chars_per_line": 15,
+      "duration_note": "成片须严格 > 60s 且 < 300s（用户 2026-11-04 令，1–5 分钟）。数值正典 = duration_policy.bounds；超限质检 REJECT。"
+    },
+    "generic": {
+      "aspect": "9:16",
+      "duration": [
+        60,
+        300
+      ],
+      "min_height": 720,
+      "safe_top": 0.08,
+      "safe_bottom": 0.12,
+      "subtitle_max_lines": 2,
+      "chars_per_line": 14,
+      "duration_note": "成片须严格 > 60s 且 < 300s（用户 2026-11-04 令，1–5 分钟）。数值正典 = duration_policy.bounds；超限质检 REJECT。"
+    }
+  },
+  "compliance": {
+    "_note": "E2 版权铁律 + E3 真实铁律，参数化在此，正典唯一",
+    "max_continuous_original_sec": 2.5,
+    "_sec_note": "★ 区分两类：连续原画面（防搬运，2.5s）vs 原声台词引用（评论性引用，8s）",
+    "max_original_audio_sec": 8.0,
+    "max_original_audio_ratio": 0.2,
+    "original_audio_min_dialogue_chars": 4,
+    "commentary_ratio_min": 0.55,
+    "forbid_inference_without_marker": true,
+    "inference_marker": "（推测）",
+    "copyright_note": "本引擎产出为评论式解说，不做片段搬运；正式商用前须自行确认素材授权",
+    "cold_open": {
+      "enabled": true,
+      "max_sec": 5.0,
+      "require_follow_narration": true,
+      "_note": "★ v3.7.1 新增「开场冷钩子（cold_open）」一等公民支持：成片前 ≤5s 直接放短剧最精彩高潮原片片段（保留原声）吸引眼球，随后接倒叙因果式解说提升原创度。普通原声段连续原画面仍受 max_continuous_original_sec=2.5s 约束；cold_open 段单独放宽为 max_sec=5.0s，且强制全片唯一且位于第 1 段（quality_gate.hard_copyright 双校验）。来源：用户 2026-10-31 指令「前5秒找短剧高潮放原片，倒叙因果接解说」。spec 写法：首 shot 标 cold_open:1 + duration(≤5.0) + keep_audio(默认 true) + 可选 caption(钩子标题字幕)。"
+    }
+  },
+  "paths": {
+    "_note": "★ 主力产线的原片/产出都走百度网盘同步目录 D:/BaiduNetdiskDownload/<剧名>/（每剧一个目录，内含 1.mp4…N.mp4；成片交付到其下的 解说成品/）。D:/剧里剧外/素材 是早期素材库，仍在但非主力。",
+    "material_root": "{{MATERIAL_ROOT}}",
+    "task_root": "{{TASK_ROOT}}",
+    "delivery_root": "{{DELIVERY_ROOT}}",
+    "comfy_base": "assets/comfy/c2a.json",
+    "sticker_root": "{{STICKER_ROOT}}",
+    "comfy_agent": "{{COMFY_AGENT}}",
+    "comfy_home": "{{COMFY_HOME}}",
+    "comfy_output": "{{COMFY_OUTPUT}}"
+  },
+  "runtime_policy": {
+    "offline_production": true,
+    "block_network_in_worker": true,
+    "allow_hf_download": false,
+    "hf_note": "HuggingFace 直连不稳；已改用 HF_ENDPOINT=https://hf-mirror.com（实测 100+ MB/s）",
+    "gpu_serialization": true,
+    "gpu_note": "按各模型配置使用设备；当前 SenseVoice 为 cuda:0。ASR、VLM、TTS 不并行驻留，VLM 完全退出后才加载 TTS；12GB 显存串行"
+  },
+  "rework": {
+    "max_rounds": 3,
+    "_note": "回环只修失败句，不推倒重写（R12 业务驳回精神）",
+    "strategies": [
+      "reseed_tts",
+      "rewrite_sentence",
+      "shorten_sentence",
+      "replace_evidence_window",
+      "switch_soul"
+    ]
+  },
+  "duration_policy": {
+    "_note": "用户 2026-11-04 令：以后解说 1 分钟以上、5 分钟以下。全平台统一单档，取消旧的 hook/mid/long 三档。数值只在此处定义；policy.py 是唯一读取器，并在导入时断言各 platform_profiles 一致。",
+    "bounds": [
+      60,
+      300
+    ],
+    "strict": true,
+    "_strict_note": "严格区间：实测时长须 > 60s 且 < 300s，等于边界也不放行。",
+    "estimate_margin": 0.12,
+    "_estimate_note": "plan_est 估算仅作预警：实测 TTS 语速快于估算约 12%（2026-11-04 实测预估 316s → 成片 279s）。硬门只认实测（铁律 F5）。"
+  },
+  "dedupe_policy": {
+    "_note": "用户 2026-11-04 令：每集内容不能一样。判据数值只在此处定义；episode_dedupe.py 是唯一读取器。这是「跨成片复用层」，与集内 F8 镜头序纪律、anti_dup.py 像素变换层互补，不可互相替代。 ★ 2026-11-08 用户 2026-11-08 当次任务令「每部三集、每集 1 分钟以上、不能重复画面」（非固定规范，集数按需）：镜头重叠上限收紧为 0（任意两集不得共用同一镜头），时间桶从 2s 收到 1s。配合写稿纪律 —— 三集按源片集号分段取镜头（如 1-10 / 11-20 / 21-30），从源头杜绝画面复用。",
+    "max_shot_overlap_ratio": 0,
+    "max_text_overlap_ratio": 0.2,
+    "min_text_novelty": 0.8,
+    "require_unique_cold_open": true,
+    "require_unique_lead": true,
+    "require_unique_gen": true,
+    "ngram": 8,
+    "shot_time_bucket": 1.0
+  },
+  "compliance_policy": {
+    "_note": "2026-11-09 新增。依据《人工智能生成合成内容标识办法》(2025-09-01)、广电总局《AI 微短剧分类分层标准》(2026-07-01) 与《微短剧发展管理办法》(2026-09-01, 第34条)。判据数值唯一源在 compliance.py，禁止在别处写第二份。",
+    "ai_label": "本作品含AI生成内容",
+    "ai_label_positions": [
+      "起始画面",
+      "播放周边"
+    ],
+    "ai_label_positions_optional": [
+      "末尾",
+      "中间"
+    ],
+    "_ai_label_note": "★ v6.0.0 按《人工智能生成合成内容标识办法》第四条原文修正：视频显式标识落位是「起始画面和视频播放周边的适当位置」，末尾/中间为可选。旧值「片头前3秒」来自二手平台运营文，无权威来源且与强标「≥2秒」口径冲突，已废弃（见 references/06-research-2026-11.md 存疑清单）。",
+    "publish_side_positions": [
+      "封面文案",
+      "发布简介",
+      "发布页必选标签"
+    ],
+    "explicit_label_spec": {
+      "_note": "强标实现范例（中国经济网 2025-09-02 转述，非本引擎自行判定的硬标准）：显式文字高度不低于画面最短边 5%、持续不少于 2 秒。1080×1920 最短边 1080 → 约 54px。字段只作发布物料提示，不进质检硬门。",
+      "min_text_height_ratio_of_short_edge": 0.05,
+      "min_duration_sec": 2.0,
+      "reference_short_edge_px": 1080
+    },
+    "implicit_metadata_spec": {
+      "_note": "《标识办法》第五条（制作要素）+ 第六条（传播要素）。字段名须含 AIGC 标识符号；MP4 只认 comment/description/title 等标准键（P91）。强标 GB 原文未核验，字段细目来自官方媒体转述，标注存疑。",
+      "mark_token": "AIGC",
+      "production_ingredients": [
+        "生成合成内容属性信息",
+        "服务提供者名称或者编码",
+        "内容编号"
+      ],
+      "distribution_ingredients": [
+        "生成合成内容属性信息",
+        "传播平台名称或者编码",
+        "内容编号"
+      ],
+      "standard_keys": [
+        "comment",
+        "description",
+        "title"
+      ]
+    },
+    "publish_labels": {
+      "_note": "中央网信办 2026 年规范短视频内容标注：6 类必选标签，发布必须选一项（中新经纬 2026-05-12 转「网信中国」）。本引擎产出通常落「含有AI生成内容」；发布页勾选属发布环节，引擎不自动执行（F7）。",
+      "required_choose_one": true,
+      "options": [
+        "含有虚构演绎内容",
+        "含有AI生成内容",
+        "含有营销信息",
+        "内容为转载",
+        "内容为个人观点",
+        "无需标注"
+      ],
+      "recommended": "含有AI生成内容",
+      "secondary_candidates": [
+        "含有虚构演绎内容",
+        "内容为转载"
+      ]
+    },
+    "ai_participation": "解说配音与二创画面由AI生成，剧情素材来自原片",
+    "marketing_words": [
+      "热播",
+      "爆款",
+      "强推",
+      "必看",
+      "震惊",
+      "最火"
+    ],
+    "absolute_ad_patterns": [
+      "最好",
+      "第一",
+      "唯一",
+      "顶级",
+      "极致",
+      "完美",
+      "百分百",
+      "100%",
+      "国家级",
+      "世界级",
+      "全网最",
+      "史上最"
+    ],
+    "platform_drain_words": [
+      "抖音",
+      "快手",
+      "小红书",
+      "加微信",
+      "关注公众号",
+      "点击链接",
+      "私信我",
+      "看我主页"
+    ],
+    "sensitive_words": [
+      "色情",
+      "裸体",
+      "赌博",
+      "吸毒",
+      "贩毒",
+      "杀人",
+      "自杀",
+      "自残",
+      "邪教",
+      "儿童色情"
+    ],
+    "cover_main_max_chars": 16,
+    "require_voice_authorization_note": true,
+    "require_provenance": true
+  },
+  "media_qc_policy": {
+    "_note": "2026-11-13 v6.0.0 新增。成片客观媒体质检的唯一数值源，读取器 = media_qc.py（禁止在别处写第二份）。全部判据纯本地 ffmpeg/ffprobe，零联网、不重编码。解析失败一律记 unknown，不得当成通过（P84 读不到≠没有）。默认只报告不拦，--strict 才硬拦，避免新判据否定历史成片。",
+    "black_min_sec": 0.5,
+    "black_pix_th": 0.1,
+    "black_pic_th": 0.98,
+    "freeze_min_sec": 1.0,
+    "freeze_noise_th": 0.001,
+    "silence_min_sec": 1.2,
+    "silence_noise_db": -45,
+    "max_av_drift_sec": 1.0,
+    "require_aigc_tag": true,
+    "cover_still_sec": 2.0,
+    "still_tolerance_sec": 0.35,
+    "_still_note": "★ v6.0.1 实链校正：封面版首帧烧录静态封面、gen 段铺静态二创图，本就应使用 freezedetect 命中，一律判 fail 是纯噪声。cover_still_sec 为封面首帧静止时长的保守估计（经验值，存疑）；still_tolerance_sec 为冻结区间与预期静止区间的边界容差。预期静止区间必须由 --from-plan + --shotmap 推导或 --expected-still 显式提供；**都不给时维持保守：所有冻结仍判 fail**（读不到上下文 ≠ 没有异常）。"
+  },
+  "visual_dedupe_policy": {
+    "_note": "2026-11-13 v6.0.0 新增。跨集成片画面实证的唯一数值源，读取器 = visual_dedupe.py。与 dedupe_policy（spec 元数据级硬闸）互补：一个管「写稿时声明不重复」，一个管「成片画面确实不重复」，不可互相替代。只报告不拦（原片不同集可能有相似镜头）。",
+    "sample_interval_sec": 2.0,
+    "hash_size": 8,
+    "max_hamming_distance": 6,
+    "max_duplicate_ratio": 0.05,
+    "max_frames_per_video": 150
+  },
+  "content_policy": {
+    "_note": "2026-11-09 新增，对标 speclip-skills 的 drama-explainer / short-drama-commentary：把内容决策从「人脑暗知识」变成可核对清单。content_brief.py 是唯一读取器。",
+    "structure": [
+      "开场钩子",
+      "快速补前情",
+      "第一次正面碰撞",
+      "连续升级",
+      "反转反击情绪爆点",
+      "结尾落点"
+    ],
+    "vo_ratio_range": [
+      0.6,
+      0.75
+    ],
+    "raw_ratio_range": [
+      0.25,
+      0.4
+    ],
+    "hook_first_cut_max_sec": 8.0,
+    "long_original_max_sec": 15.0,
+    "max_long_original_count": 2,
+    "vague_words": [
+      "命运",
+      "站稳",
+      "移不开眼",
+      "退路",
+      "齿轮开始转动",
+      "不寒而栗"
+    ],
+    "max_same_ep_run": 5
+  },
+  "_setup_note": "本文件是模板。首次使用请运行 python scripts/setup.py 生成 config/engine.json（本机私有、不提交）。所有双花括号占位符由向导按你的机器填写。"
+}

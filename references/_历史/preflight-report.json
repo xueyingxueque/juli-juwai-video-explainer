@@ -1,0 +1,80 @@
+{
+  "engine_version": "2.0.0",
+  "checks": {
+    "binaries": {
+      "ffmpeg": {
+        "ok": true,
+        "path": "D:/AITools/TTS/Dots.tts/wzf/ffmpeg/bin/ffmpeg.exe"
+      },
+      "ffprobe": {
+        "ok": true,
+        "path": "D:/AITools/TTS/Dots.tts/wzf/ffmpeg/bin/ffprobe.exe"
+      },
+      "asr_python": {
+        "ok": false,
+        "path": "D:/AITools/TTS/Breeze-TTS-2-T8/T8star-Aix-Voice-Studio-v0.2.9-win32-x64/resources/python/python.exe"
+      },
+      "tts_python": {
+        "ok": false,
+        "path": "D:/AITools/TTS/Dots.tts/wzf/python.exe"
+      },
+      "llama_server": {
+        "ok": false,
+        "path": "D:/AITools/VLM/bin/llama-server.exe"
+      }
+    },
+    "models": {
+      "iic/SenseVoiceSmall": {
+        "engine": "sensevoice",
+        "ok": true,
+        "runtime": "tts_python",
+        "device": "cuda:0",
+        "measured_avg_cer": 0.03,
+        "measured_rtf": 0.0201
+      },
+      "faster-whisper-medium": {
+        "engine": "whisper",
+        "dir": "D:/AITools/models/faster-whisper-medium",
+        "declared_status": "incomplete",
+        "measured_avg_cer": null,
+        "ok": false,
+        "reason": "required_file_missing",
+        "partial_artifacts": [
+          "quality-download-parts"
+        ],
+        "hint": "下载未完成；需换镜像源重下，不可将不完整下载视为就绪"
+      },
+      "faster-whisper-tiny": {
+        "engine": "whisper",
+        "dir": "D:/AITools/models/faster-whisper-tiny",
+        "declared_status": "ready_but_unusable",
+        "measured_avg_cer": 0.963,
+        "ok": true,
+        "size_mb": 72.0
+      }
+    },
+    "asr_measure": {
+      "skipped": true,
+      "reason": "no_labelled_samples",
+      "baseline_from_config": 0.03,
+      "hint": "提供 <name>.wav + <name>.txt 样本对可现场复测；否则采用配置中已实测入库的基线"
+    }
+  },
+  "decision": {
+    "ready_asr_models": [
+      "iic/SenseVoiceSmall",
+      "faster-whisper-tiny"
+    ],
+    "usable_asr_models": [
+      "iic/SenseVoiceSmall"
+    ],
+    "strong_asr_models": [
+      "iic/SenseVoiceSmall"
+    ],
+    "speech_gate_available": true,
+    "verdict": "ready",
+    "production_threshold": 0.06,
+    "reasons": [],
+    "selected_asr": "iic/SenseVoiceSmall"
+  }
+}

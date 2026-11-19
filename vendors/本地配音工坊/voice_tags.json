@@ -1,0 +1,98 @@
+{
+  "子言": {
+    "gender": "male",
+    "desc": "深沉·磁性入耳（男声）",
+    "scenes": [
+      "情感短片",
+      "纪录片旁白",
+      "广告旁白",
+      "深沉叙述",
+      "双人播客"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "小昊": {
+    "gender": "male",
+    "desc": "醇厚·稳重低沉（男声）",
+    "scenes": [
+      "双人播客",
+      "深度解读",
+      "新闻评论",
+      "纪录片旁白",
+      "知识分享"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "小棠": {
+    "gender": "female",
+    "desc": "明快·元气满满（女声）",
+    "scenes": [
+      "单人播客",
+      "活泼解说",
+      "电商口播",
+      "知识分享",
+      "短视频"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "小雨": {
+    "gender": "female",
+    "desc": "知性·沉稳清晰（女声）",
+    "scenes": [
+      "科普解说",
+      "教程演示",
+      "职场",
+      "知性叙述",
+      "资讯口播"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "思思": {
+    "gender": "female",
+    "desc": "温柔·娓娓道来（女声）",
+    "scenes": [
+      "情感电台",
+      "助眠ASMR",
+      "有声书",
+      "温柔叙述",
+      "虚拟陪伴"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "明宇": {
+    "gender": "male",
+    "desc": "清朗·温润悦耳（男声）",
+    "scenes": [
+      "新闻播报",
+      "资讯口播",
+      "商务解说",
+      "知识分享",
+      "双人播客"
+    ],
+    "curated": true,
+    "recommended": true
+  },
+  "四川话": {
+    "gender": "unknown",
+    "desc": "四川方言参考音",
+    "scenes": [
+      "方言短视频",
+      "喜剧",
+      "地域号"
+    ]
+  },
+  "陕西话": {
+    "gender": "unknown",
+    "desc": "陕西方言参考音",
+    "scenes": [
+      "方言短视频",
+      "喜剧",
+      "地域号"
+    ]
+  }
+}

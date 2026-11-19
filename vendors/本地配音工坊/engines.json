@@ -1,0 +1,154 @@
+{
+  "tts_root": "D:\\AITools\\TTS",
+  "engines": [
+    {
+      "id": "breeze",
+      "name": "Breeze TTS 2",
+      "vendor": "BreezeBlue / RESONIA",
+      "root": "D:\\AITools\\TTS\\Breeze-TTS-2-T8",
+      "python": "D:\\AITools\\TTS\\Breeze-TTS-2-T8\\T8star-Aix-Voice-Studio-v0.2.9-win32-x64\\resources\\python\\python.exe",
+      "python_ok": true,
+      "worker": "workers/worker_breeze.py",
+      "cwd": "D:\\AITools\\TTS\\Breeze-TTS-2-T8",
+      "sample_rate": 24000,
+      "features": [
+        "voice_clone",
+        "voice_design",
+        "voice_direction",
+        "vocal_events",
+        "bilingual",
+        "service_mode",
+        "24k"
+      ],
+      "tagline": "开源榜首：Voice Design 无参考音造音色 + 中英双语 + 中文[笑]事件标签",
+      "role": "engine",
+      "tier": 1,
+      "ready": true
+    },
+    {
+      "id": "chatterbox",
+      "name": "Chatterbox-V3",
+      "vendor": "Resemble AI",
+      "root": "D:\\AITools\\TTS\\Chatterbox-V3",
+      "python": "D:\\AITools\\TTS\\Chatterbox-V3\\wzf\\python.exe",
+      "python_ok": true,
+      "worker": "workers/worker_chatterbox.py",
+      "cwd": "D:\\AITools\\TTS\\Chatterbox-V3",
+      "sample_rate": 24000,
+      "features": [
+        "voice_clone",
+        "multilingual",
+        "exaggeration",
+        "cfg_weight",
+        "temperature",
+        "builtin_voice",
+        "watermark",
+        "24k"
+      ],
+      "tagline": "23 语种多语 TTS + 中文精调 zh-cmn，零样本克隆 + 夸张度/节奏可控，自带水印",
+      "role": "engine",
+      "tier": 3,
+      "ready": true,
+      "models": [
+        "v3",
+        "zh-cmn"
+      ],
+      "default_model": "v3"
+    },
+    {
+      "id": "dotstts",
+      "name": "dots.tts",
+      "vendor": "小红书 hilab",
+      "root": "D:\\AITools\\TTS\\Dots.tts",
+      "python": "D:\\AITools\\TTS\\Dots.tts\\wzf\\python.exe",
+      "python_ok": true,
+      "worker": "workers/worker_dotstts.py",
+      "cwd": "D:\\AITools\\TTS\\Dots.tts",
+      "sample_rate": 48000,
+      "features": [
+        "voice_clone",
+        "prompt_text",
+        "multilingual",
+        "48k"
+      ],
+      "tagline": "48kHz 高保真 + 音色相似度 SOTA，多语种最强",
+      "role": "engine",
+      "tier": 2,
+      "ready": true,
+      "models": [
+        "dots-tts-mf",
+        "dots-tts-soar"
+      ],
+      "default_model": "dots-tts-soar"
+    },
+    {
+      "id": "emotiontts",
+      "name": "EmotionTTS",
+      "vendor": "EmotionTTS 整合包",
+      "root": "D:\\AITools\\TTS\\emotionTTS_v4.7.0",
+      "python": "D:\\AITools\\TTS\\emotionTTS_v4.7.0\\core\\pyenv\\python.exe",
+      "python_ok": true,
+      "worker": null,
+      "cwd": "D:\\AITools\\TTS\\emotionTTS_v4.7.0",
+      "sample_rate": 0,
+      "features": [
+        "orchestrator",
+        "llm_emotion_match",
+        "asr_tagging"
+      ],
+      "tagline": "AI 情绪导演（编排层）：LLM 自动选情绪+参考音，底层仍调 IndexTTS2",
+      "role": "orchestrator",
+      "tier": 3,
+      "ready": true
+    },
+    {
+      "id": "indextts2",
+      "name": "IndexTTS2",
+      "vendor": "B站 Index 团队",
+      "root": "D:\\AITools\\TTS\\nj-win-index-tts2",
+      "python": "D:\\AITools\\TTS\\nj-win-index-tts2\\app\\python\\build_venv\\python.exe",
+      "python_ok": true,
+      "worker": "workers/worker_indextts2.py",
+      "cwd": "D:\\AITools\\TTS\\nj-win-index-tts2\\app\\python",
+      "sample_rate": 22050,
+      "features": [
+        "voice_clone",
+        "emotion_vector",
+        "emotion_audio",
+        "emotion_text",
+        "duration_control"
+      ],
+      "tagline": "情感/音色解耦 + 时长精确可控，中文综合最稳",
+      "role": "engine",
+      "tier": 3,
+      "ready": true
+    },
+    {
+      "id": "pilottts",
+      "name": "PilotTTS",
+      "vendor": "PilotTTS 团队",
+      "root": "D:\\AITools\\TTS\\PilotTTS-Studio",
+      "python": "D:\\AITools\\TTS\\PilotTTS-Studio\\python\\python.exe",
+      "python_ok": true,
+      "worker": "workers/worker_pilottts.py",
+      "cwd": "D:\\AITools\\TTS\\PilotTTS-Studio",
+      "sample_rate": 24000,
+      "features": [
+        "voice_clone",
+        "emotion_tag",
+        "paralinguistic",
+        "dialect"
+      ],
+      "tagline": "说话人相似度最高 + 笑/哭/叹气副语言标签，方言强",
+      "role": "engine",
+      "tier": 3,
+      "ready": true,
+      "models": [
+        "pilot_tts",
+        "pilot_tts_instruct"
+      ],
+      "default_model": "pilot_tts"
+    }
+  ],
+  "unknown_dirs": []
+}

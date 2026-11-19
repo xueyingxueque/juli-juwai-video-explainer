@@ -1,0 +1,479 @@
+{
+  "pool": "D:\\AITools\\TTS\\音色包",
+  "count": 26,
+  "voices": [
+    {
+      "alias": "主持人-女",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\主持人-女.mp3",
+      "filename": "主持人-女.mp3",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 15.46,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "小欧",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\小欧.m4a",
+      "filename": "小欧.m4a",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 16.98,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "小萝莉",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\小萝莉.wav",
+      "filename": "小萝莉.wav",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 1.92,
+      "gender": "female",
+      "scenes": [
+        "情感陪伴",
+        "游戏配音",
+        "虚拟角色"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "偏短(可能不稳)"
+    },
+    {
+      "alias": "播客",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\播客.mp3",
+      "filename": "播客.mp3",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 16.72,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "新闻腔-女",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\新闻腔-女.mp3",
+      "filename": "新闻腔-女.mp3",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 16.25,
+      "gender": "unknown",
+      "scenes": [
+        "新闻播报",
+        "资讯口播"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "纪录片",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\纪录片.mp3",
+      "filename": "纪录片.mp3",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 11.36,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "谭湘文徐浩伦",
+      "file": "D:\\AITools\\TTS\\音色包\\常用\\谭湘文徐浩伦.wav",
+      "filename": "谭湘文徐浩伦.wav",
+      "group": "常用",
+      "common": true,
+      "style": "",
+      "duration": 12.0,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "亲爱的",
+      "file": "D:\\AITools\\TTS\\音色包\\亲爱的，一起谈个恋爱吧.wav",
+      "filename": "亲爱的，一起谈个恋爱吧.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 2.22,
+      "gender": "unknown",
+      "scenes": [
+        "ASMR",
+        "情感陪伴",
+        "虚拟角色"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "偏短(可能不稳)"
+    },
+    {
+      "alias": "亲爱的2",
+      "file": "D:\\AITools\\TTS\\音色包\\亲爱的，我是你的虚拟女友王知风。.WAV",
+      "filename": "亲爱的，我是你的虚拟女友王知风。.WAV",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 2.81,
+      "gender": "female",
+      "scenes": [
+        "ASMR",
+        "情感陪伴",
+        "虚拟角色"
+      ],
+      "prompt_text": "亲爱的，我是你的虚拟女友王知风。",
+      "curated": false,
+      "quality": "偏短(可能不稳)"
+    },
+    {
+      "alias": "亲爱的3",
+      "file": "D:\\AITools\\TTS\\音色包\\亲爱的，我是你的虚拟表哥王知风.WAV",
+      "filename": "亲爱的，我是你的虚拟表哥王知风.WAV",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 3.37,
+      "gender": "male",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "亲爱的，我是你的虚拟表哥王知风",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "周星驰",
+      "file": "D:\\AITools\\TTS\\音色包\\周星驰.mp3",
+      "filename": "周星驰.mp3",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 12.85,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "四川话",
+      "file": "D:\\AITools\\TTS\\音色包\\四川话.wav",
+      "filename": "四川话.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 9.52,
+      "gender": "unknown",
+      "scenes": [
+        "方言短视频",
+        "喜剧",
+        "地域号"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳",
+      "desc": "四川方言参考音"
+    },
+    {
+      "alias": "四年时光转眼即逝",
+      "file": "D:\\AITools\\TTS\\音色包\\四年时光转眼即逝，教室里的欢声笑语还在耳边回响。谢谢曾经陪伴我的每一个你，未来的路虽然各自不同，但我们的友情永远不会毕业。愿我们带着最美好的回忆，勇敢地追逐各自的梦想。.mp3",
+      "filename": "四年时光转眼即逝，教室里的欢声笑语还在耳边回响。谢谢曾经陪伴我的每一个你，未来的路虽然各自不同，但我们的友情永远不会毕业。愿我们带着最美好的回忆，勇敢地追逐各自的梦想。.mp3",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 16.33,
+      "gender": "unknown",
+      "scenes": [
+        "Vlog",
+        "喜剧",
+        "情感短片",
+        "情绪素材",
+        "抒情文案",
+        "综艺"
+      ],
+      "prompt_text": "四年时光转眼即逝，教室里的欢声笑语还在耳边回响。谢谢曾经陪伴我的每一个你，未来的路虽然各自不同，但我们的友情永远不会毕业。愿我们带着最美好的回忆，勇敢地追逐各自的梦想。",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "妩媚性感-漫剧",
+      "file": "D:\\AITools\\TTS\\音色包\\妩媚性感-漫剧.wav",
+      "filename": "妩媚性感-漫剧.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 10.98,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "子言",
+      "file": "D:\\AITools\\TTS\\音色包\\子言_深沉·磁性入耳.wav",
+      "filename": "子言_深沉·磁性入耳.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "深沉·磁性入耳",
+      "duration": 7.58,
+      "gender": "male",
+      "scenes": [
+        "情感短片",
+        "纪录片旁白",
+        "广告旁白",
+        "深沉叙述",
+        "双人播客"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "深沉·磁性入耳（男声）",
+      "recommended": true
+    },
+    {
+      "alias": "小昊",
+      "file": "D:\\AITools\\TTS\\音色包\\小昊_醇厚·稳重低沉.wav",
+      "filename": "小昊_醇厚·稳重低沉.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "醇厚·稳重低沉",
+      "duration": 6.8,
+      "gender": "male",
+      "scenes": [
+        "双人播客",
+        "深度解读",
+        "新闻评论",
+        "纪录片旁白",
+        "知识分享"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "醇厚·稳重低沉（男声）",
+      "recommended": true
+    },
+    {
+      "alias": "小棠",
+      "file": "D:\\AITools\\TTS\\音色包\\小棠_明快·元气满满.wav",
+      "filename": "小棠_明快·元气满满.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "明快·元气满满",
+      "duration": 7.52,
+      "gender": "female",
+      "scenes": [
+        "单人播客",
+        "活泼解说",
+        "电商口播",
+        "知识分享",
+        "短视频"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "明快·元气满满（女声）",
+      "recommended": true
+    },
+    {
+      "alias": "小欧-慢速",
+      "file": "D:\\AITools\\TTS\\音色包\\小欧-慢速.m4a",
+      "filename": "小欧-慢速.m4a",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 20.78,
+      "gender": "unknown",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "小雨",
+      "file": "D:\\AITools\\TTS\\音色包\\小雨_知性·沉稳清晰.wav",
+      "filename": "小雨_知性·沉稳清晰.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "知性·沉稳清晰",
+      "duration": 8.44,
+      "gender": "female",
+      "scenes": [
+        "科普解说",
+        "教程演示",
+        "职场",
+        "知性叙述",
+        "资讯口播"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "知性·沉稳清晰（女声）",
+      "recommended": true
+    },
+    {
+      "alias": "带货腔-女",
+      "file": "D:\\AITools\\TTS\\音色包\\带货腔-女.mp3",
+      "filename": "带货腔-女.mp3",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 16.38,
+      "gender": "unknown",
+      "scenes": [
+        "电商口播",
+        "直播带货"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "可用(建议裁到15s内)"
+    },
+    {
+      "alias": "思思",
+      "file": "D:\\AITools\\TTS\\音色包\\思思_温柔·娓娓道来.wav",
+      "filename": "思思_温柔·娓娓道来.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "温柔·娓娓道来",
+      "duration": 8.72,
+      "gender": "female",
+      "scenes": [
+        "情感电台",
+        "助眠ASMR",
+        "有声书",
+        "温柔叙述",
+        "虚拟陪伴"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "温柔·娓娓道来（女声）",
+      "recommended": true
+    },
+    {
+      "alias": "我十六岁上就嫁到",
+      "file": "D:\\AITools\\TTS\\音色包\\我十六岁上就嫁到何家.WAV",
+      "filename": "我十六岁上就嫁到何家.WAV",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 2.6,
+      "gender": "female",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "偏短(可能不稳)"
+    },
+    {
+      "alias": "明宇",
+      "file": "D:\\AITools\\TTS\\音色包\\明宇_清朗·温润悦耳.wav",
+      "filename": "明宇_清朗·温润悦耳.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "清朗·温润悦耳",
+      "duration": 8.08,
+      "gender": "male",
+      "scenes": [
+        "新闻播报",
+        "资讯口播",
+        "商务解说",
+        "知识分享",
+        "双人播客"
+      ],
+      "prompt_text": "",
+      "curated": true,
+      "quality": "最佳",
+      "desc": "清朗·温润悦耳（男声）",
+      "recommended": true
+    },
+    {
+      "alias": "粤语",
+      "file": "D:\\AITools\\TTS\\音色包\\粤语.WAV",
+      "filename": "粤语.WAV",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 3.78,
+      "gender": "unknown",
+      "scenes": [
+        "喜剧",
+        "地域号",
+        "方言短视频"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "郭德纲",
+      "file": "D:\\AITools\\TTS\\音色包\\郭德纲.wav",
+      "filename": "郭德纲.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 6.98,
+      "gender": "male",
+      "scenes": [
+        "通用"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳"
+    },
+    {
+      "alias": "陕西话",
+      "file": "D:\\AITools\\TTS\\音色包\\陕西话.wav",
+      "filename": "陕西话.wav",
+      "group": "根目录",
+      "common": false,
+      "style": "",
+      "duration": 9.52,
+      "gender": "unknown",
+      "scenes": [
+        "方言短视频",
+        "喜剧",
+        "地域号"
+      ],
+      "prompt_text": "",
+      "curated": false,
+      "quality": "最佳",
+      "desc": "陕西方言参考音"
+    }
+  ]
+}

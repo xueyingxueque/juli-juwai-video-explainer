@@ -1,0 +1,1063 @@
+"""S3 解说成稿 —— 载入六流人格契约 + 三段式骨架 + 钩子候选。
+
+人格正典在 ~/.workbuddy/skills/短剧解说*流灵魂/SKILL.md，本脚本只做**指针引用**，
+不复制实现、不自创腔调描述（引擎 R14/R16：单一正典）。
+
+硬约束：
+1. 每句绑定 >=1 证据 ID；无证据的句子不允许存在。
+2. 推断句必须显式标（推测）。
+3. 钩子 <=20 字且含具体信息。
+4. 字数按实测语速 4.5-6.0 字/秒反推（E4 铁律：最终时长由音频决定，稿子只是预算）。
+5. 禁词零命中。
+"""
+import json
+import math
+import re
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import vlm  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+TASK = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
+TARGET_SEC = int(sys.argv[2]) if len(sys.argv) > 2 else 60
+FORCE_SOUL = sys.argv[3] if len(sys.argv) > 3 else 'auto'
+DIRECTION = sys.argv[4] if len(sys.argv) > 4 else ''
+
+# ── 人格契约（正典指针，勿改腔调描述）────────────────────────
+SOULS = {
+    '悬念流': {
+        'skill': '短剧解说悬念流灵魂',
+        'persona': '用「我」直接说话，快狠勾人腔，抖音爆款解说风格',
+        'rule': '每句至少留一个"想知道"，句间有悬念',
+        'opening': '经典开头：注意看…／你敢信吗？／太气人了！',
+        'tempo': '快', 'check': ['每句是否留了想知道', '句间是否有悬念', '是否有经典开头套路'],
+    },
+    '毒舌流': {
+        'skill': '短剧解说毒舌流灵魂',
+        'persona': '用「我」直接说话，犀利辛辣腔',
+        'rule': '一针见血、站队感强、金句频出、骂得有水平',
+        'opening': '',
+        'tempo': '中速', 'check': ['有没有一针见血的判断', '是否站队明确', '金句够不够密'],
+    },
+    '吐槽流': {
+        'skill': '短剧解说吐槽流灵魂',
+        'persona': '用「我」直接说话，嘴快梗密腔',
+        'rule': '每3句至少1个吐槽点，节奏快、有态度',
+        'opening': '',
+        'tempo': '快', 'check': ['每3句有吐槽点吗', '梗密吗', '态度明确吗'],
+    },
+    '感动流': {
+        'skill': '短剧解说感动流灵魂',
+        'persona': '用「我」直接说话，温柔细腻腔',
+        'rule': '语速慢、有共情、细节放大、催泪但不刻意',
+        'opening': '',
+        'tempo': '慢', 'check': ['有细节放大吗（小动作胜过千言万语）', '观众能在角色里看到自己吗', '给情绪发酵时间了吗'],
+    },
+    '治愈流': {
+        'skill': '短剧解说治愈流灵魂',
+        'persona': '用「我」直接说话，温暖慢热腔',
+        'rule': '语速慢、有留白、反高潮、温暖人心、反向情绪价值',
+        'opening': '',
+        'tempo': '慢热', 'check': ['不鸡汤不说教吗', '有留白吗', '是反高潮还是平铺直叙'],
+    },
+}
+
+# 代号体系：真实爆款几乎都用固定代称（小帅/小美/大壮/翠花），
+# 辨识度极强，且能一次性解决「人称混乱」问题（引擎_status: v2.2 已落地）
+NAME_SYSTEM = {
+    'male': ['小帅', '大壮', '阿豪'],
+    'female': ['小美', '翠花', '阿秀'],
+    '_note': '按 POV 性别取第一个，全篇不出现原片真名。可配置关闭。',
+}
+
+# 语气标注：真实爆款全篇标注，供 TTS 配音使用（engine_status: v2.2 已落地）
+TONE_MARKS = {
+    'exaggerated': '[语气夸张]', 'teasing': '[调侃地]', 'laugh': '[笑]',
+    'tense': '[紧张地]', 'faster': '[语速加快]', 'slower': '[语速放缓]',
+    'pause': '[停顿]', 'mocking': '[吐槽]', 'resonant': '[共鸣地]',
+    'deep': '[语气转为深沉]', 'somber': '[节奏放缓]',
+    'excited': '[高潮部分，语气激动]', 'warm': '[语气升温]',
+}
+# 段落角色 → 语气（对应真实稿的 10 段结构）
+BLOCK_TONE = {
+    'hook': 'exaggerated', 'setup': 'teasing', 'rising': 'faster',
+    'twist': 'tense', 'core': 'slower', 'climax': 'excited',
+    'ending': 'somber', 'aftertaste': 'deep',
+}
+
+TONE_RULES = """
+写作纪律（违反即打回）：
+1. 原片是唯一事实源。人物姓名、身份、动机、因果必须有画面或台词支撑。
+2. 姓名不确定时用外观称谓（「那个穿厨师服的男人」），不要猜名字。
+3. 无法确证的动机/内心戏，必须显式写「（推测）」。
+4. 不要复述画面已显示的内容——那是浪费口播时长。
+5. 台词里提到但画面没出现的事，不能当画面事实写。
+6. 不要给画面里的人物加未证实的身份（如把厨师服男子写成"金牌主厨"，
+   除非证据画面里确实出现该身份的文字或标志）。
+7. **不要用否定式表述**（"他不是退学""她没有生气"）——极易与前文事实矛盾，
+   写完必须回读检查每句是否与已述事实冲突。
+"""
+
+# ★ 视角定死铁律（来源：影视解说文案剪辑课 + 爆款解说拆解，见 references/narrative-craft.md）
+POV_RULE = """
+★ 视角定死（本条最关键，违反即重写）：
+- 全程只从【主角】一人视角推进，其他人物一律通过主角引出。
+- 全篇人称必须与主角一致：主角是男性就用「他」，女性就用「她」，不许中途切换。
+- 不许在两句之间切换叙述对象。
+- 错误示范（视角乱跳）：村民骂道士 → 道士不在乎 → 县太爷判案
+- 正确示范：全员以主角视角推进。
+
+★ 开头只用三框架（不要自创）：
+1. 甩冲突：直接扔信息炸弹（"新婚当晚，丈夫掀开盖头，发现新娘是自己的亲姐姐"）
+2. 倒叙钩子：先给结局，再回到起点（"事情要从三天前说起"）
+3. 身份反差：平凡外表 ↔ 隐藏身份（"扫地阿姨其实是集团老板"）
+
+★ 加法示例（把平淡句改出锋芒，学这个感觉）：
+  原：这一刀下去，小伙定是必死无疑，县令看到这一幕吓得脸色发白
+  改：这一刀砍的不只是人命，更是他自己的脑袋乌纱帽
+
+★ 减法示例（砍掉过渡，两句直接接）：
+  原：捕快为了快点去死，竟然一刀斩了当朝丞相之子，这一刀下去，小伙定是必死无疑
+  改：直接两句话接，中间过渡不要
+
+★ 节奏：每 15 秒至少一个转折/爆点/新悬念，不要平均用力。
+
+★★ ★★ 拒绝翻译画面（最容易踩的坑，你上一版就栽在这）
+镜头负责呈现视觉场景，解说负责解读深层内核——「画面见形，文字传意」。
+不要把画面动作直接写进口播（那是字幕，不是解说）。
+
+  ❌ 翻译画面：她撕了辞职报告 / 他在工地搬砖 / 他获得了金牌
+  ✅ 解读内核：她撕了辞职报告——那是他攒了三个月的尊严
+               他在工地搬砖，一个月挣的还不够她买一个包
+               金牌到手那天，她才知道自己嫁的是个什么人
+
+  画面拍不出来的东西才需要你写：动机、代价、难处、为什么。
+  不要只说「发生了什么」，要说「这意味着什么」。
+
+★★ ★★ 必须用因果链推动，禁止平铺（决定成败的一条）
+观众对因果链的敏感度远高于碎片信息。三个枢纽事件是「因—果—再因」，
+不是并列的独立画面。
+
+  ❌ 平铺（平铺直叙=流水账）：接着…然后…   ← 一念到底，观众划走
+  ✅ 因果：因为…所以…／但…偏偏…／本以为…没想到…
+
+★ 八种衔接方法（第 N 句与第 N+1 句之间必须用上）：
+1. 递进：可还没完／但更糟的是／但这还不够
+2. 人物引导：门开了 → 某人出现（**绝不直接报名字**）
+3. 时间：第二天／就在这时（**前30秒内慎用，弱连接**）
+4. 联系点：但…偏偏…／本以为…／没想到…／不料…／谁知…
+5. 因果：因为…所以…（**最核心，多用**）
+6. 反差：别人…而他…
+7. 悬念：可他万万没想到…
+8. 画面承接：上一镜的物件/动作引出下一镜
+
+**检验标准：把你的稿子逐句遮住，任何一句拿掉，如果后面照样成立，说明这句是废的。**
+
+★★ ★★★ 段落任务链（决定逻辑性的关键，比衔接词重要得多）
+
+真实爆款的逻辑性来自「**每段有独立任务**」，不是靠衔接词。
+你必须按下表分配每一段的任务，**不许连续两段做同一件事**：
+
+| block | 这段要干什么 | 硬要求 |
+|---|---|---|
+| hook | 交代主角身份 + 反差 | 用注意看式 |
+| setup | **抛出外部目标** | 具体到一件物/一个约定，不能空说「他遇到了事」 |
+| setup2 | **立不为人知的特质** | 主角藏着的本事/秘密，埋线 |
+| rising | 交代他们怎么碰上 | 过程，不是结果 |
+| core | 交代怎么应对/合作 | 具体方法，不是「他很努力」 |
+| climax | **第一个名场面** | 还原画面 + 带原话 |
+| climax2 | **第二个名场面** | 升级版，比 climax 更炸 |
+| twist | **反转 / 重新解释前面的细节** | 把 setup 埋的线收回 |
+| aftertaste | 升华 | 这故事说明了什么 |
+| cta | 互动 | @某人 / 评论区做题 |
+
+★★ 问句的使用（实测踩坑，务必遵守）：
+**问句只允许出现在最后一段 cta**，前 8 段一律用陈述句。
+- ❌ 每句都拖一个「想知道…？？」—— 这是审问式，观感极差
+- ✅ 悬念靠**陈述句制造**：说一半、留一半、给一个未说完的细节
+- ✅ 问句只在结尾 cta 用一次，且是**面向观众提问**（你觉得…？评论区说说…）
+示例（只在结尾）：「你们觉得他是狠，还是可怜？评论区说说你的看法」
+
+★ 三条硬规则：
+1. **每段一个独立任务**，禁止连续三段讲同一件事
+2. **必须有两个名场面**（climax + climax2），只有一次高潮 = 平淡
+3. **结尾必须升华 + 互动**，不能停在「想知道…？」这种问句
+
+★ 逻辑性自检（写完必做）：
+把稿子逐段遮住，问「这段删掉，后面还成立吗？」如果成立 → 这段是废的，重写。
+
+
+★★ ★★ 固定代号体系（真实爆款必备：辨识度 + 一次解决人称混乱）
+全篇用固定代称，**不出现原片真名**。按主角性别取名：
+{male_name}／{female_name}。配角用同体系的另一个名。
+例：「{male_name}被妻子逼顶替主厨」→「{male_name}」指的就是他，全篇不再换称呼。
+这既是真实爆款的标准做法，也让观众记得住「小帅/小美」而不是记不住剧情。
+
+★★ ★★ 段落功能 + 语气标注（真实爆款全篇标注，供 TTS 配音）
+每段必须带 block 角色与 tone 标注。参考结构：
+- hook（0-3s）→ exaggerated
+- setup → teasing
+- rising → faster
+- twist → tense
+- core → slower
+- climax → excited
+- ending → somber
+- aftertaste → deep
+
+每行 JSON 输出时加 "block" 与 "tone" 字段，tone 从下列词条取：
+{tone_vocab}
+
+"""
+
+HOOK_FORMULAS = """开头句式库（源自 5 份真实爆款稿实证，按使用率排序）：
+
+★ 主流：「注意看」式（4份样本中3份使用，可选开关）
+1. 注意看点名式：注意看，这个男人叫{male_name}，他{最大噩梦/处境}
+2. 注意看复数式：注意看！这两个{人物}叫{male_name}和{female_name}，他们正在{悬念动作}
+3. 注意看画面式：注意看，眼前这个{外貌特征}的男人叫{male_name}
+   第二句必有「身份+处境+悬念」：他人生中最大的{负面A}，不是{负面B}，而是{悬念}
+
+★ 次主流：倒叙事件式（用户认知一：最炸的镜头放最前，不按原片顺序）
+4. 就在{时间}，{她/他}的世界彻底改变
+5. {开场事件}，一场{冲突类型}大戏悄然上演
+
+★ 第三：身份反差式
+6. 他，平凡的外表下，藏着不为人知的秘密
+7. 他本是剧中小透明，却因一场意外成焦点
+
+★ 第四：悬念指令式
+8. 看好了，这家伙，马上要大放异彩了
+9. 猜猜看，那位主角，他究竟会做出什么惊人的举动
+
+要求：每个候选 <=20字、必须给主角起代号、含具体信息。八个候选用不同句式。"""
+
+
+def name_and_tone(story: dict) -> tuple:
+    """按 POV 性别分配固定代号 + 语气词表。
+
+    实证来源：5 份真实爆款稿，4 份用「小帅/小美/大壮/翠花」这类固定代称，
+    百度百科甚至有「注意看，这个男人叫小帅」的独立词条 —— 已是行业标配。
+    """
+    g = (story.get('pov') or {}).get('gender', '')
+    male = g in ('男', '男性', 'male')
+    return (NAME_SYSTEM['male'][0] if male else NAME_SYSTEM['female'][0],
+            NAME_SYSTEM['female'][0] if male else NAME_SYSTEM['male'][0],
+            ' / '.join(sorted(set(TONE_MARKS.values()))))
+
+
+def pick_soul(story: dict, cfg_genre: str) -> str:
+    """题材 → 流派映射。正典见 SKILL.md §4。"""
+    if FORCE_SOUL in SOULS:
+        return FORCE_SOUL
+    g = cfg_genre + ' ' + json.dumps(story.get('acts', ''), ensure_ascii=False)
+    if any(k in g for k in ['逆袭', '打脸', '身份', '反转', '悬疑', '真相', '推理']):
+        return '悬念流'
+    if any(k in g for k in ['伦理', '婆媳', '憋屈', '的现实']):
+        return '毒舌流'
+    if any(k in g for k in ['甜宠', '霸总', '误会', '恋爱']):
+        return '吐槽流'
+    if any(k in g for k in ['亲情', '离散', '牺牲', '母亲', '父亲', '病']):
+        return '感动流'
+    if any(k in g for k in ['治愈', '乡村', '慢生活', '田园']):
+        return '治愈流'
+    return '悬念流'
+
+
+def build_hooks(story: dict, ev: list, soul: dict, pov_desc: str, n: int = 5) -> list:
+    male_name, female_name, tone_vocab = name_and_tone(story)
+    _anchors = story.get('onscreen_text') or ''
+    _beats = story.get('beats') or {}
+    _shots = _beats.get('shot_candidates', [])
+    _goals = '、'.join(_beats.get('goal_keywords', [])) or '（无明显外部目标，需从画面推断）'
+    _twists = '、'.join(_beats.get('twist_keywords', [])) or '（无明显反转词）'
+    beats_txt = chr(10).join(
+        f"  {s['evidence_id']} (冲击度 {s['score']}): {s['desc'][:44]}" for s in _shots[:6])
+    anchor_n = len([x for x in _anchors.split('｜') if x.strip()])
+    pov_desc = pov_desc + f'｜代号：{male_name}／{female_name}'
+    """生成 n 个钩子候选，各用不同公式。"""
+    by_id = {e['evidence_id']: e['desc'] for e in ev}
+    acts = {a['name']: a for a in story.get('acts', [])}
+    ev_ids = [i for a in story.get('acts', []) for i in a.get('evidence_ids', [])] or ['E001']
+    ev_txt = '\n'.join(f"[{i}] {by_id.get(i, '')}" for i in ev_ids[:8])
+
+    out = []
+    for attempt in range(2):
+        retry_rule = ('上次候选全部超过 20 字。本次必须重新压缩，逐字计数；每条 8-20 个汉字，'
+                      '删除背景铺垫，只保留一个具体动作/冲突/悬念。') if attempt else ''
+        data = vlm.ask_json(f"""一部{TARGET_SEC}秒竖屏短剧解说，要 {n} 个开场钩子候选。
+
+【故事】{story.get('logline','')}
+【冲突】{acts.get('冲突',{}).get('summary','')}
+【选择】{acts.get('选择',{}).get('summary','')}
+【结果】{acts.get('结果',{}).get('summary','')}
+
+【可用画面证据】
+{ev_txt}
+
+{HOOK_FORMULAS}
+{TONE_RULES}
+【主角 POV】{pov_desc}
+{POV_RULE}
+腔调要求：{soul['persona']}；{soul['rule']}
+
+{retry_rule}
+每个钩子必须：<=20字、含具体信息（数字/身份/动作）、五个用不同公式、互不重复。
+输出 JSON：{{"hooks":[{{"formula":"公式名","text":"钩子","evidence_ids":["E001"]}}]}}""",
+        max_tokens=700, temperature=0.7)
+        if not data or not data.get('hooks'):
+            continue
+        out = []
+        for h in data['hooks'][:n]:
+            t = (h.get('text') or '').strip()
+            if not t:
+                continue
+            out.append({
+                'formula': h.get('formula', ''), 'text': t, 'chars': len(t),
+                'evidence_ids': h.get('evidence_ids', []),
+                'gate': 'OK' if len(t) <= 20 and len(t) >= 8 else 'BAD_LEN',
+            })
+        if any(h['gate'] == 'OK' for h in out):
+            break
+    return out
+
+
+def select_evidence_schedule(story: dict, ev: list, count: int, first_id: str = '') -> list[str]:
+    """Build a stable line→shot contract so the writer cannot repeatedly pick one salient frame."""
+    by_id = {row.get('evidence_id'): row for row in ev if isinstance(row, dict)}
+    ordered = []
+
+    def add(eid):
+        if isinstance(eid, str) and eid in by_id and eid not in ordered:
+            ordered.append(eid)
+
+    add(first_id)
+    beats = (story.get('beats') or {}).get('shot_candidates', [])
+    for shot in beats:
+        add(shot.get('evidence_id') if isinstance(shot, dict) else None)
+    for event in story.get('pivotal_events') or []:
+        for eid in event.get('evidence_ids', []) if isinstance(event, dict) else []:
+            add(eid)
+    for row in sorted(ev, key=lambda x: (float(x.get('t', float('inf')))
+                                          if isinstance(x, dict) and isinstance(x.get('t'), (int, float))
+                                          else float('inf'))):
+        add(row.get('evidence_id') if isinstance(row, dict) else None)
+
+    if len(ordered) < min(6, count):
+        raise ValueError(f'逐句剪辑至少需要 {min(6, count)} 个唯一时间证据，当前仅有 {len(ordered)} 个')
+    return [ordered[i % len(ordered)] for i in range(count)]
+
+
+def write_script(story: dict, ev: list, soul_name: str, hook: dict, budget: int,
+                 pov_desc: str, evidence_schedule: list[str]) -> dict:
+    male_name, female_name, tone_vocab = name_and_tone(story)
+    _anchors = story.get('onscreen_text') or ''
+    _beats = story.get('beats') or {}
+    _shots = _beats.get('shot_candidates', [])
+    _goals = '、'.join(_beats.get('goal_keywords', [])) or '（无明显外部目标，需从画面推断）'
+    _twists = '、'.join(_beats.get('twist_keywords', [])) or '（无明显反转词）'
+    beats_txt = chr(10).join(
+        f"  {s['evidence_id']} (冲击度 {s['score']}): {s['desc'][:44]}" for s in _shots[:6])
+    anchor_n = len([x for x in _anchors.split('｜') if x.strip()])
+    pov_desc = pov_desc + f'｜代号：{male_name}／{female_name}'
+    by_id = {e['evidence_id']: e['desc'] for e in ev}
+    acts = {a['name']: a for a in story.get('acts', [])}
+    ev_txt = '\n'.join(f"[{i}] {by_id.get(i,'')}" for i in list(by_id)[:20])
+    schedule_txt = '\n'.join(
+        f"第{i}句 → {eid}（{next((row.get('t') for row in ev if row.get('evidence_id') == eid), '?')}秒）："
+        f"{by_id.get(eid, '')}"
+        for i, eid in enumerate(evidence_schedule, 1))
+    _anchors = story.get('onscreen_text') or ''
+    _beats = story.get('beats') or {}
+    _shots = _beats.get('shot_candidates', [])
+    _goals = '、'.join(_beats.get('goal_keywords', [])) or '（无明显外部目标，需从画面推断）'
+    _twists = '、'.join(_beats.get('twist_keywords', [])) or '（无明显反转词）'
+    beats_txt = chr(10).join(
+        f"  {s['evidence_id']} (冲击度 {s['score']}): {s['desc'][:44]}" for s in _shots[:6])
+    pes = story.get('pivotal_events') or []
+    line_count = max(10, round(budget / 22))
+    min_line_chars = max(14, math.floor((TARGET_SEC * 4.5) / line_count))
+    max_line_chars = min(28, math.ceil((TARGET_SEC * 6.0) / line_count))
+    chain_txt = '\n'.join(
+        f"PE{i} {e.get('event','')}｜因为：{e.get('cause','')}｜所以：{e.get('effect','')}｜衔接法：{e.get('linkage','')}｜证据 {e.get('evidence_ids',[])}"
+        for i, e in enumerate(pes, 1)) or '（无枢纽事件，请自行从证据提炼 3 个因果相连的事件）'
+
+    data = vlm.ask_json(f"""写一条 {TARGET_SEC} 秒竖屏短剧解说的口播稿。
+
+【人格】{soul_name} —— {SOULS[soul_name]['persona']}；{SOULS[soul_name]['rule']}
+【节奏】{SOULS[soul_name]['tempo']}
+【开头】必须用这个钩子：{hook['text']}
+【字数预算】全文必须落在 {TARGET_SEC * 4.5:.0f}-{TARGET_SEC * 6.0:.0f} 字，目标约 {budget} 字。
+【分句硬约束】输出恰好 {line_count} 行；每行 {min_line_chars}-{max_line_chars} 字；一行只讲一个信息推进，不堆多个动作、字幕和转折。全篇不能因“每个枢纽事件 2-3 句”而扩写超出总预算；10 个 block 任务按序覆盖，额外行可拆分任务但不能重复讲同一事实。
+【逐句剪辑证据约束】每句只选 1 个最相关 evidence_id，且令 primary_evidence_id 与它相同；整篇至少使用 6 个不同证据，任一 evidence_id 全稿最多出现 2 次。优先使用不同时间点的证据，让镜头跟着叙述推进。
+【逐句镜头分配表】每句必须使用表中指定的唯一 ID，不得互换、重复或另选；若需适配该画面，请改写句子但不得补造事实：
+{schedule_txt}
+【衔接硬约束】至少 6/10 句使用自然连接词，并保证至少 6 组相邻句能看出承接。可用词包括：但、却、不过、然而、于是、因此、所以、才、本以为、没想到、不料、谁知、接着、随后、结果。按语义自然选择，不要机械重复；每句必须给上一句带来新信息或新处境，禁止仅把证据描述逐条串起来。
+【主体一致硬约束】主角动作要与对应画面人物一致；「他人」「其他」是泛指，不代表男性角色。不要把画面没显示的动作、动机或结果写成事实。
+
+【故事】{story.get('logline','')}
+【冲突】{acts.get('冲突',{}).get('summary','')}
+【选择】{acts.get('选择',{}).get('summary','')}
+【结果】{acts.get('结果',{}).get('summary','')}
+
+【★ 三个枢纽事件（必须按这条因果链写，不能并列成画面流水账）】
+{chain_txt}
+每个枢纽事件写 2-3 句：先交代它的 cause（为什么会这样），
+
+【★ 段落任务素材（决定逻辑性，从证据里抽的）】
+外部目标候选（用它做 setup 段）：{_goals}
+反转线索（用它做 twist 段）：{_twists}
+名场面候选画面（climax / climax2 必须从这里面选两次）：
+{beats_txt}
+再讲 effect 带来什么新处境，最后落到人物的选择或代价上。
+**要用衔接法把这三个事件扣成一条链，不能各讲各的。**
+
+【画面证据】（引用只能从这里选；注意：证据是你能引用的画面，不是你要复述的内容）
+
+★★ ★★ 画面字幕全集（**唯一事实边界**，共 {anchor_n} 条）
+画面里能读到的所有字幕文字：
+{_anchors}
+
+铁律：口播里出现的任何具体动作/物品/数字，都必须能从上面清单里找到出处。
+清单里没有的（哪怕台词提过、哪怕常识说得通），一律不许当成画面事实写。
+要写心理、写动机可以标「（推测）」，但不能编造画面里没有的动作。
+{ev_txt}
+
+【主角 POV】{pov_desc}
+{POV_RULE}
+{TONE_RULES}
+
+【主人指定方向】{DIRECTION or '无额外方向；按证据、故事因果与段落任务自主写作。'}
+方向只能影响叙述重点和表达，不能补造画面或剧情事实。
+
+要求：
+- 第一句必须就是上面的钩子。
+- 全程只从主角视角推进，主角以外的人不单独成为叙述对象。
+- 按「冲突 → 选择 → 结果」推进。
+- **写成一个人在说话，不是写大纲**。禁止把每句写成"X？Y？"这种罗列式短语。
+- 问句最多两句，其余用陈述句制造悬念。
+- 结尾留一个让人想看完的点。
+{hook.get('retry_hint','')}
+输出 JSON（每行必须有 block 与 tone）：
+每句只引用 1 个最相关 evidence_id，并令 primary_evidence_id 与它相同；整稿至少用 6 个不同证据，任何 evidence_id 不得出现超过 2 次。primary_evidence_id 是后续剪辑定位的唯一主镜头。
+{{"lines":[{{"text":"一句口播","evidence_ids":["E001"],"primary_evidence_id":"E001","inference":false,"block":"hook|setup|rising|twist|core|climax|ending|aftertaste","tone":"exaggerated|teasing|faster|tense|slower|excited|somber|deep"}}]}}""",
+        max_tokens=1400, temperature=0.5)
+    return data or {}
+
+
+Q = '？?'
+
+
+GENDER_HINT = {
+    '她': ['女性', '女子', '女人', '女孩', '女', '母', '妻', '她'],
+    '他': ['男性', '男子', '男人', '男孩', '男', '父', '丈夫', '他'],
+}
+
+
+def check_gender(text: str, ids: list, by_id: dict, pov_gender: str = '') -> dict:
+    """人物一致性校验 —— 以 POV 为准（视角定死铁律）。
+
+    实测教训：VLM 通篇用一个视角但所引画面是另一个人；更隐蔽的是否定式自相矛盾。
+    pov_gender 传入后，全篇人称必须与主角一致，不与单个画面比。
+    """
+    # 判据：主角自述优先。「我」出现即说明叙述重心在主角，
+    # 句中提到配角（「她把我顶替了」）是正确写法，不算不一致。
+    # 「他人」「其他」是普通词，不是男性第三人称；避免“交给他人”被误判成男性视角。
+    pronoun_text = text.replace('他人', '').replace('其他', '')
+    if '我' in pronoun_text:
+        return {'ok': True, 'why': '第一人称自述，主角主导叙述'}
+    if not ids:
+        return {'ok': True, 'why': '未绑定证据，跳过'}
+    if '他' not in pronoun_text and '她' not in pronoun_text:
+        return {'ok': True, 'why': '无第三人称人称，跳过'}
+
+    # ★ 视角定死的判据是「谁在主导叙述」，不是「句子里有没有出现她」。
+    # 主角第一人称自述时，配角（妻子/海归）必然会被提到——
+    # 「她把我顶替了」正是正确的写法，不该被判不一致。
+    # 真正要拦的是：**整句的叙述重心落在配角身上**（如「她决定让海归顶替」，
+    # 而主角只是被提及），以及**第三人称叙述时中途切人称**。
+    if pov_gender:
+        want = '他' if pov_gender in ('男', '男性', 'male') else '她'
+        who = '他' if ('他' in pronoun_text and '她' not in pronoun_text) else '她'
+        if who == want:
+            return {'ok': True, 'why': f'与 POV 一致（{want}）'}
+
+        # 全句只有配角人称且无主角自述 → 叙述重心偏离 POV
+        return {'ok': False,
+                'why': f'整句以配角「{who}」为叙述重心，主角 POV 是{pov_gender}，'
+                       f'应改为「{want}」或改成主角第一人称自述'}
+
+    desc = ' '.join(by_id.get(i, '') for i in ids if i in by_id)
+    if not desc:
+        return {'ok': True, 'why': '证据描述缺失，跳过'}
+    same = sum(desc.count(k) for k in GENDER_HINT[who])
+    other = '他' if who == '她' else '她'
+    opp = sum(desc.count(k) for k in GENDER_HINT[other])
+    if opp >= 2 and same == 0:
+        return {'ok': False, 'why': f'人称用「{who}」但所引画面为「{other}」特征（异性别线索 {opp} 处）'}
+    return {'ok': True, 'why': f'同性别线索 {same} 处'}
+
+
+LINKAGE_MARKERS = {
+    '递进': ['可还没完', '但更糟', '更糟糕', '但这还不', '不料', '谁知', '更过分', '接着', '随后', '结果'],
+    '联系点': ['偏偏', '本以为', '没想到', '不曾想', '孰料', '万万没想到'],
+    '因果': ['因为', '所以', '因此', '于是', '正因为', '才', '结果'],
+    '反差': ['但', '却', '不过', '然而', '别人', '而他', '而她', '偏偏只有', '倒是', '只有他', '只有她'],
+    '悬念': ['可他', '可她', '但他不知道', '但她不知道', '接下来', '后面'],
+    '人物引导': ['门开了', '这时', '这时候', '门口', '身后', '走来'],
+    '时间': ['第二天', '隔天', '下午', '晚上', '从此', '那时'],
+}
+
+
+def check_cohesion(lines: list) -> dict:
+    """衔接门 —— 校验句子之间是否用上了衔接法与因果推进。
+
+    实测教训（用户指出「像在翻译画面」）：VLM 会把画面事件并排列出，
+    每句都能单独成立，但整篇没有故事推进感。机器判据：
+    1. 多数句子必须带衔接标记（因果/递进/联系点…）；
+    2. 相邻句之间要有内容承接（共同关键词或时间/因果指示）。
+    """
+    texts = [(ln.get('text') or '').strip() for ln in lines]
+    n = len(texts)
+    if n < 3:
+        return {'verdict': 'PASS', 'reason': '句数过少，跳过'}
+
+    with_link = 0
+    kinds = []
+    for t in texts:
+        hit = [k for k, ws in LINKAGE_MARKERS.items() if any(w in t for w in ws)]
+        if hit:
+            with_link += 1
+            kinds.append(hit[0])
+    ratio = with_link / n
+
+    # 相邻承接：后句含前句的 2 字以上片段，或有衔接词
+    connected = 0
+    for a, b in zip(texts, texts[1:]):
+        has_link = any(w in b for ws in LINKAGE_MARKERS.values() for w in ws)
+        frags = [x for x in re.split(r'[，。、；：\s「」？！]', a) if len(x) >= 3]
+        has_echo = any(f[:3] in b for f in frags[:4])
+        if has_link or has_echo:
+            connected += 1
+    pair_ratio = connected / max(n - 1, 1)
+
+    # 翻译画面特征：句子全是「谁 + 动作」结构且无心理/因果词
+    flat = sum(1 for t in texts
+               if re.match(r'^[他她我].{0,4}[被把用让]', t)
+               and not re.search(r'(因为|所以|但|却|才|为了|没想到|不肯|不敢)', t))
+
+    verdict = 'PASS' if (ratio >= 0.6 and pair_ratio >= 0.6 and flat / n <= 0.4) else 'FAIL'
+    return {
+        'verdict': verdict, 'linkage_ratio': round(ratio, 3),
+        'pair_connected_ratio': round(pair_ratio, 3),
+        'flat_describe_ratio': round(flat / n, 3),
+        'linkage_kinds': kinds[:10],
+        'why': '' if verdict == 'PASS' else
+               f'衔接标记率 {ratio:.0%}（需≥60%）／相邻承接 {pair_ratio:.0%}（需≥60%）／平铺描述 {flat/n:.0%}（需≤40%）',
+    }
+
+
+def check_semantic_dup(lines: list) -> dict:
+    """语义去重门 —— 衔接门测不出「同义重复」。
+
+    实测教训：词法 3 字片段重合度全为 0，但第 2 句「可她笑得比金牌还亮」
+    与第 6 句「她低头认错」讲的是同一件事 —— **字面不重合，语义重复**。
+    故必须交给 VLM 判「这两句是不是同一件事」。
+    """
+    texts = [(ln.get('text') or '').strip() for ln in lines]
+    n = len(texts)
+    if n < 3:
+        return {'verdict': 'PASS', 'pairs_checked': 0, 'dups': []}
+
+    pairs = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            a, b = texts[i], texts[j]
+            if not a or not b:
+                continue
+            # 先用词法粗筛，减少 VLM 调用
+            fa = {a[k:k + 3] for k in range(max(len(a) - 2, 1))}
+            fb = {b[k:k + 3] for k in range(max(len(b) - 2, 1))}
+            if fa & fb:
+                pairs.append((i, j, 'lexical'))
+
+    if not pairs:
+        # 词法无交集时，只取相邻窗口做语义抽查（VLM 成本高）
+        for i in range(n - 1):
+            pairs.append((i, i + 1, 'adjacent'))
+
+    dups = []
+    for i, j, why in pairs:
+        try:
+            v = vlm.ask(f"""下面两句口播，判断它们是否在讲**同一件事**。
+
+A：{texts[i]}
+B：{texts[j]}
+
+规则：
+- 若两句传递的是同一个信息/同一个转折/同一种情绪 → 输出 {{"dup": true}}
+- 若两句讲不同的推进、不同的层面 → 输出 {{"dup": false}}
+只输出 JSON。""", max_tokens=120, temperature=0.1)
+            import json as _json
+            mm, end = v.find('{'), v.rfind('}')
+            r = _json.loads(v[mm:end + 1]) if mm >= 0 and end > mm else {}
+        except Exception:
+            r = {}
+        if r.get('dup'):
+            dups.append({'a_line': i + 1, 'b_line': j + 1, 'a': texts[i][:26], 'b': texts[j][:26]})
+
+    ratio = len(dups) / max(n - 1, 1)
+    return {
+        'verdict': 'PASS' if ratio <= 0.15 else 'FAIL',
+        'pairs_checked': len(pairs),
+        'dup_pairs': len(dups),
+        'dup_ratio': round(ratio, 3),
+        'dups': dups,
+        'why': '' if ratio <= 0.15 else f'{len(dups)} 对句子在讲同一件事（去重率须≤15%）',
+    }
+
+
+# 段落任务链（照真实爆款定，见 references/directing.md §5.6）
+BLOCK_ROLES = {
+    'hook': '交代主角身份+反差',
+    'setup': '抛出外部目标',
+    'setup2': '立不为人知的特质（埋线）',
+    'rising': '交代怎么碰上',
+    'core': '交代怎么应对/合作',
+    'climax': '第一个名场面',
+    'climax2': '第二个名场面（升级）',
+    'twist': '反转/收回伏笔',
+    'ending': '结局收束',
+    'aftertaste': '升华',
+    'cta': '互动引导',
+}
+REQUIRED_BLOCKS = {'hook', 'climax'}
+
+
+def check_block_structure(lines: list) -> dict:
+    """段落任务门 —— 逻辑性的真正判据。
+
+    实测教训（用户两次点破「毫无逻辑性」）：衔接词达标但逻辑依然崩。
+    根因是**段落没有独立任务**：第 3/4/5 句都在讲「他打工受苦」，
+    第 6/7 句都在讲「金牌反转」—— 5 段在做 2 件事。
+
+    本门判三件事：
+    1. 必需段落是否齐全（hook / climax）
+    2. 段落任务是否重复（连续两段任务相同 = 冗余）
+    3. 结尾是否只是问句（没升华也没互动 = 观众没拿到东西）
+    """
+    blocks = [(ln.get('block') or '').strip() for ln in lines]
+    texts = [(ln.get('text') or '').strip() for ln in lines]
+    n = len(lines)
+    rep = {'total': n, 'blocks': blocks}
+
+    missing = [b for b in REQUIRED_BLOCKS if b not in blocks]
+    rep['missing_required'] = missing
+
+    # 段落任务重复：连续两段 block 相同
+    dup_pairs = []
+    for i in range(len(blocks) - 1):
+        if blocks[i] and blocks[i] == blocks[i + 1]:
+            dup_pairs.append({'i': i + 1, 'block': blocks[i],
+                              'why': f'第{i+1}、{i+2}段都是 {blocks[i]}（{BLOCK_ROLES.get(blocks[i], "")}）'})
+    rep['consecutive_dup_blocks'] = dup_pairs
+
+    # 结尾只有问句 = 缺升华与互动
+    tail = texts[-1] if texts else ''
+    rep['ending_is_question_only'] = bool(tail) and tail[-1] in '？?' and len(tail) <= 24
+    rep['has_aftertaste'] = 'aftertaste' in blocks
+    rep['has_cta'] = 'cta' in blocks
+
+    # ★ 问句只允许出现在 cta 段
+    # 实测教训：提示词里写了「想知道…？」做示例，模型把它当模板滥用，
+    # 结果 9/9 行都拖一个「想知道…？」—— 观感是审问式，非常糟。
+    # 真实爆款只在结尾 cta 用一次问句做互动。
+    Q = '？?'
+    misplaced_q = []
+    for i, (b2, t) in enumerate(zip(blocks, texts), 1):
+        if b2 != 'cta' and any(q in t for q in Q):
+            misplaced_q.append({'line': i, 'block': b2, 'text': t[:26]})
+    rep['misplaced_questions'] = misplaced_q
+    rep['question_lines'] = sum(1 for t in texts if any(q in t for q in Q))
+
+    # 汇总
+    problems = []
+    if missing:
+        problems.append(f'缺必需段落 {missing}')
+    if dup_pairs:
+        problems.append(f'{len(dup_pairs)} 处相邻段落任务重复')
+    if rep['ending_is_question_only'] and not rep['has_aftertaste']:
+        problems.append('结尾停在问句，无升华无互动')
+    if misplaced_q:
+        problems.append(f'{len(misplaced_q)} 段在非 cta 处用问句（问句只许出现在结尾互动）')
+    rep['verdict'] = 'PASS' if not problems else 'FAIL'
+    rep['why'] = '；'.join(problems)
+    return rep
+
+
+GENDER_CUES = {'男': ['男性', '男子', '男人', '男孩', '男', '父亲', '丈夫', '厨师服', '工装'],
+              '女': ['女性', '女子', '女人', '女孩', '女', '母亲', '妻子', '丝巾', '耳环']}
+
+
+def check_subject_match(lines: list, by_id: dict) -> dict:
+    """主体一致性门 —— 抓「画面是 A 做的事，叙述安给 B」。
+
+    ★ 这是一类全新的错误，现有门全部抓不到：
+      - 锚点门只查「动作是否在画面里」→ 主体错配不影响动作存在性，过
+      - 人物门只查「人称是否与 POV 一致」→ 整篇人称一致，但配错了画面，照过
+      - 证据绑定只查「叙述与画面是否矛盾」→ 「他退学打工」与画面不矛盾，过
+
+    实测致命案例：画面里说「我要退学去打工」的是**女性**（E015），
+    但稿子写成「小帅被妻子逼退学打工」——女方的行为安到了男方身上。
+
+    判据：句子的动作主体人称 → 与所引证据画面人物性别 → 是否矛盾。
+    """
+    rep = {'total': len(lines), 'checked': 0, 'issues': [], 'verdict': 'PASS'}
+
+    for i, ln in enumerate(lines, 1):
+        text = (ln.get('text') or '').strip()
+        ids = ln.get('evidence_ids') or []
+        if not ids or not text:
+            continue
+        desc = ' '.join(by_id.get(x, '') for x in ids if x in by_id)
+        if not desc:
+            continue
+
+        # 证据画面里出现的人物性别（只统计明确描述人物的帧）
+        male = sum(desc.count(k) for k in GENDER_CUES['男'])
+        female = sum(desc.count(k) for k in GENDER_CUES['女'])
+        if male == 0 and female == 0:
+            continue
+        scene_gender = '男' if male > female else '女'
+
+        # 句子的动作主体：看「谁 + 动作动词」
+        # 找出句子里承担动作的人称
+        actor = None
+        # 泛指「他人」不代表男性角色，不能因此把女性主角的动作判成主体错配。
+        actor_text = text.replace('他人', '').replace('其他', '')
+        for w, role in (('小帅', None), ('他', '男'), ('她', '女'), ('我', None)):
+            if w in actor_text:
+                actor = w
+                break
+        if actor is None:
+            continue
+
+        actor_gender = None
+        if actor in ('他',):
+            actor_gender = '男'
+        elif actor in ('她',):
+            actor_gender = '女'
+        rep['checked'] += 1
+
+        # 矛盾判定：证据画面主要是同性别的动作主体
+        if actor_gender and actor_gender != scene_gender:
+            # 排除「A 提到 B」的句式：若另一人称也在句中且动作属于另一人，不算错
+            other = '她' if actor_gender == '男' else '他'
+            # 句子里若同时有另一人称，且 actor 在「被动/被逼」位置，可能是误判
+            passive = any(k in text for k in ['被', '逼', '让', '叫', '劝'])
+            if passive:
+                continue
+            rep['issues'].append({
+                'line': i, 'actor': actor, 'actor_gender': actor_gender,
+                'scene_gender': scene_gender, 'ids': ids,
+                'text': text[:30],
+                'why': f'叙述说「{actor}」({actor_gender})做这件事，但所引画面是'
+                       f'{scene_gender}性人物（男线索{male}/女线索{female}）',
+            })
+
+    rep['failed'] = len(rep['issues'])
+    rep['verdict'] = 'PASS' if rep['failed'] == 0 else 'FAIL'
+    return rep
+
+
+def check_evidence_diversity(lines: list) -> dict:
+    """证据多样性门 —— 抓「反复用同一帧」。
+
+    实测：v2.5 稿子 10 句里 E024 被引用 5 次，37 帧只用到少数几帧。
+    真实爆款是**镜头跟着叙述走**，每句对应不同画面。
+    """
+    cnt = {}
+    for ln in lines:
+        for x in (ln.get('evidence_ids') or []):
+            cnt[x] = cnt.get(x, 0) + 1
+    over = {k: v for k, v in cnt.items() if v > 2}
+    uniq = len(cnt)
+    rep = {'unique_evidence': uniq, 'total_refs': sum(cnt.values()),
+           'max_repeat': max(cnt.values()) if cnt else 0,
+           'over_reused': over}
+    problems = []
+    if over:
+        problems.append(f'{len(over)} 个证据被引用超过 2 次')
+    if len(lines) >= 6 and uniq < 6:
+        problems.append(f'{len(lines)} 句只用了 {uniq} 个不同证据（应≥6）')
+    rep['verdict'] = 'PASS' if not problems else 'FAIL'
+    rep['why'] = '；'.join(problems)
+    return rep
+
+
+def lint_lines(lines: list, by_id: dict, lo: float, hi: float, pov_gender: str = '') -> dict:
+    """口播稿硬校验：证据绑定 / 字数预算 / 口播可读性。
+
+    可读性门来自实测教训：VLM 默认写"大纲体"——每句都是罗列式短语，
+    问句占比高、平均句长过短，不像人说话。故设问句占比≤40%、均长 14-30 两道门。
+    """
+    rep = {'total': len(lines), 'no_evidence': 0, 'long_lines': [], 'chars': 0}
+    texts = []
+    for i, ln in enumerate(lines, 1):
+        t = (ln.get('text') or '').strip()
+        texts.append(t)
+        rep['chars'] += len(t)
+        ids = ln.get('evidence_ids') or []
+        if not ids or any(x not in by_id for x in ids):
+            rep['no_evidence'] += 1
+        primary = ln.get('primary_evidence_id')
+        if (len(ids) > 1 and not primary) or (primary and primary not in ids):
+            rep['no_evidence'] += 1
+        if len(t) > 30:
+            rep['long_lines'].append({'line': i, 'chars': len(t)})
+    rep['estimated_sec'] = round(rep['chars'] / 5.25, 1)
+    rep['in_budget'] = lo <= rep['chars'] <= hi
+
+    # 人物一致性：以 POV 为准（视角定死铁律）
+    rep['gender_issues'] = []
+    for i, ln in enumerate(lines, 1):
+        ids = ln.get('evidence_ids') or []
+        r = check_gender((ln.get('text') or ''), ids, by_id, pov_gender)
+        if not r['ok']:
+            rep['gender_issues'].append({'line': i, 'text': (ln.get('text') or '')[:30],
+                                         'ids': ids, 'why': r['why']})
+    rep['gender_ok'] = len(rep['gender_issues']) == 0
+
+    # 衔接门：句子之间是否用上衔接法、有无故事推进（防"翻译画面"）
+    rep['cohesion'] = check_cohesion(lines)
+    rep['semantic_dup'] = check_semantic_dup(lines)
+    rep['block_structure'] = check_block_structure(lines)
+    rep['subject_match'] = check_subject_match(lines, by_id)
+    rep['evidence_diversity'] = check_evidence_diversity(lines)
+    n = len(texts) or 1
+    q = sum(1 for t in texts if t and t[-1] in Q)
+    short = sum(1 for t in texts if len(t) <= 12)
+    avg = rep['chars'] / n
+    rep['readability'] = {
+        'question_ratio': round(q / n, 3), 'question_ratio_ok': q / n <= 0.4,
+        'short_line_ratio': round(short / n, 3),
+        'avg_len': round(avg, 1), 'avg_len_ok': 14 <= avg <= 30,
+        'verdict': 'PASS' if (q / n <= 0.4 and 14 <= avg <= 30) else 'FAIL',
+    }
+    rep['texts'] = texts
+    return rep
+
+
+def main() -> int:
+    existing = [name for name in ('script.json', 'narration.txt') if (TASK / name).exists()]
+    if existing:
+        print('[ERR] 任务目录已有可用稿件产物: ' + ', '.join(existing) +
+              '；为避免旧稿与本轮失败结果混淆，请使用新任务目录', file=sys.stderr)
+        return 2
+    story_p, ev_p = TASK / 'story.json', TASK / 'evidence.json'
+    if not story_p.exists() or not ev_p.exists():
+        print('[ERR] 缺 story.json / evidence.json，先跑 S2', file=sys.stderr)
+        return 1
+    story = json.loads(story_p.read_text(encoding='utf-8'))
+    ev = json.loads(ev_p.read_text(encoding='utf-8'))
+
+    pov = story.get('pov') or {}
+    pov_gender = (pov.get('gender') or '').strip()
+    pov_desc = f"{pov.get('who', '主角')}（{pov_gender or '性别待定'}）—— {pov.get('why', '画面最多、贯穿全片')}"
+    print(f'[S3] 主角 POV: {pov_desc}', flush=True)
+
+    soul_name = pick_soul(story, story.get('genre', ''))
+    soul = SOULS[soul_name]
+    print(f'[S3] 流派选型: {soul_name}（正典 {soul["skill"]}）', flush=True)
+
+    lo, hi = TARGET_SEC * 4.5, TARGET_SEC * 6.0
+    budget = int((lo + hi) / 2)
+    line_count = max(10, round(budget / 22))
+    min_line_chars = max(14, math.floor(lo / line_count))
+    max_line_chars = min(28, math.ceil(hi / line_count))
+
+    print('[S3] 生成钩子候选...', flush=True)
+    hooks = build_hooks(story, ev, soul, pov_desc)
+    good = [h for h in hooks if h['gate'] == 'OK']
+    (TASK / 'hooks.json').write_text(json.dumps(hooks, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f'      {len(good)}/{len(hooks)} 个通过长度门（<=20字）', flush=True)
+    if not good:
+        print('[ERR] 无合格钩子，终止（不硬写）', file=sys.stderr)
+        return 2
+
+    chosen = good[0]
+    print(f'[S3] 采用钩子（{chosen["formula"]}）: {chosen["text"]}', flush=True)
+
+    # 口播可读性不过则重生（最多 3 次），把失败指标回灌给模型
+    by_id = {e['evidence_id']: e['desc'] for e in ev}
+    script = None
+    accepted = False
+    for attempt in range(3):
+        print(f'[S3] 生成口播稿（第 {attempt + 1} 次）...', flush=True)
+        try:
+            scheduled_ids = select_evidence_schedule(story, ev, line_count,
+                                                     (chosen.get('evidence_ids') or [''])[0])
+        except ValueError as e:
+            print(f'[ERR] {e}', file=sys.stderr)
+            return 2
+        data = write_script(story, ev, soul_name, chosen, budget, pov_desc, scheduled_ids)
+        lines = data.get('lines', []) if isinstance(data, dict) else []
+        if not lines:
+            print('      VLM 未返回口播稿，重试', flush=True)
+            continue
+        script = data
+        r = lint_lines(lines, by_id, lo, hi, pov_gender)
+        schedule_mismatches = []
+        for i, (line, expected_id) in enumerate(zip(lines, scheduled_ids), 1):
+            refs = line.get('evidence_ids') or []
+            if refs != [expected_id] or line.get('primary_evidence_id') != expected_id:
+                schedule_mismatches.append({'line': i, 'expected': expected_id,
+                                            'evidence_ids': refs,
+                                            'primary_evidence_id': line.get('primary_evidence_id')})
+        if len(lines) != len(scheduled_ids):
+            schedule_mismatches.append({'expected_lines': len(scheduled_ids), 'actual_lines': len(lines)})
+        r['evidence_schedule'] = {'verdict': 'PASS' if not schedule_mismatches else 'FAIL',
+                                  'mismatches': schedule_mismatches,
+                                  'expected_ids': scheduled_ids}
+        print(f"      字数 {r['chars']}（预算 {lo:.0f}-{hi:.0f}）  "
+              f"问句 {r['readability']['question_ratio']:.0%}  "
+              f"可读性 {r['readability']['verdict']}  "
+              f"衔接 {r['cohesion']['verdict']}({r['cohesion']['linkage_ratio']:.0%})  "
+              f"去重 {r['semantic_dup']['verdict']}({r['semantic_dup']['dup_ratio']:.0%})  "
+              f"段落 {r['block_structure']['verdict']}  "
+              f"主体 {r['subject_match']['verdict']}  "
+              f"多样 {r['evidence_diversity']['verdict']}  "
+              f"镜头表 {r['evidence_schedule']['verdict']}", flush=True)
+        if (r['in_budget'] and r['readability']['verdict'] == 'PASS' and r['no_evidence'] == 0
+                and not r['long_lines']
+                and r['gender_ok'] and r['cohesion']['verdict'] == 'PASS'
+                and r['semantic_dup']['verdict'] == 'PASS'
+                and r['block_structure']['verdict'] == 'PASS'
+                and r['subject_match']['verdict'] == 'PASS'
+                and r['evidence_diversity']['verdict'] == 'PASS'
+                and r['evidence_schedule']['verdict'] == 'PASS'):
+            accepted = True
+            break
+        hint = (f"上次未通过：全文 {r['chars']} 字（必须 {lo:.0f}-{hi:.0f}，目标 {budget}），"
+                f"共 {line_count} 行、每行 {min_line_chars}-{max_line_chars} 字；"
+                f"问句占比 {r['readability']['question_ratio']:.0%}（需≤40%）、"
+                f"平均句长 {r['readability']['avg_len']}（需 14-30）。")
+        _sm = r.get('subject_match', {}).get('issues', [])
+        if _sm:
+            hint += (f" 第{_sm[0]['line']}句主体错配：{_sm[0]['why']}。"
+                     f'动作主体必须与所引画面里实际在做这件事的人一致，'
+                     f'不要把一方的行为安到另一方头上。')
+        _co = r.get('cohesion', {})
+        if _co.get('verdict') == 'FAIL':
+            hint += (f" 衔接失败：{_co.get('why','')}。返修时让至少 6/10 句有明确自然承接，"
+                     '后一行需承接前一行的信息，并推进新的原因、选择或后果；不能只堆“但/却”等词。')
+        _dv = r.get('evidence_diversity', {})
+        if _dv.get('verdict') == 'FAIL':
+            reused = '、'.join(f'{eid}×{count}' for eid, count in _dv.get('over_reused', {}).items())
+            reused_lines = []
+            for eid, count in _dv.get('over_reused', {}).items():
+                rows = [str(i) for i, ln in enumerate(lines, 1) if eid in (ln.get('evidence_ids') or [])]
+                if rows:
+                    reused_lines.append(f'{eid}（第{"、".join(rows)}句，共{count}次）')
+            already_used = {eid for ln in lines for eid in (ln.get('evidence_ids') or [])}
+            alternatives = [e for e in ev if e.get('evidence_id') not in already_used]
+            alt_text = '；'.join(f"{e.get('evidence_id')}: {str(e.get('desc') or '')[:28]}"
+                                 for e in alternatives[:10]) or '（无未使用证据；可改选本稿中仅用过一次的相关证据）'
+            hint += (f" 证据重复：{_dv['why']}。超额证据 {reused or '无'}；出现句位："
+                     f"{'；'.join(reused_lines) or '见重复证据'}。可替换为尚未使用的证据：{alt_text}。"
+                     '重写重复句并换成真正支撑该句的其他证据；全稿至少 6 个不同 ID，任一 ID 最多两次，'
+                     '不要为了多样而挂不相关证据。')
+        _sched = r.get('evidence_schedule', {}).get('mismatches', [])
+        if _sched:
+            m = _sched[0]
+            if 'line' in m:
+                hint += (f" 镜头分配违约：第{m['line']}句必须只用 {m['expected']}，且 primary_evidence_id 相同；"
+                         '按逐句镜头分配表重写，并确保所有行号都照表引用。')
+            else:
+                hint += f" 镜头分配违约：必须输出恰好 {m['expected_lines']} 句，逐句按分配表绑定证据。"
+        _mq = r['block_structure'].get('misplaced_questions', [])
+        if _mq:
+            hint += f" 有 {len(_mq)} 段在非结尾处用了问句（如第{_mq[0]['line']}段）。"
+            hint += '问句只能出现在最后一段 cta，其余全用陈述句，悬念靠说一半留一半。'
+        if r['block_structure']['verdict'] == 'FAIL':
+            bs = r['block_structure']
+            hint += f" 段落结构问题：{bs['why']}。"
+            hint += (' 每段必须有独立任务（照 hook→setup→setup2→rising→core→climax→climax2→twist→aftertaste→cta 分配），'
+                     '不要连续两段讲同一件事。')
+        if r['semantic_dup']['dups']:
+            dp = r['semantic_dup']['dups'][0]
+            hint += (f" 另外第{dp['a_line']}句与第{dp['b_line']}句在讲同一件事"
+                     f"（{dp['a']} / {dp['b']}）。同一件事只说一次，换个新信息。")
+        if r['gender_issues']:
+            g = r['gender_issues'][0]
+            hint += (f" 另外第{g['line']}句「{g['text']}」人称用错了：{g['why']}。"
+                     f"请先确定人物性别再写，人称必须与所引画面一致。")
+        hint += " 请写成连贯的口语独白，不要罗列式短语。"
+        chosen = dict(chosen)
+        chosen['retry_hint'] = hint
+
+    if script is None or not accepted:
+        failed_lines = (script or {}).get('lines', [])
+        failed_report = lint_lines(failed_lines, by_id, lo, hi, pov_gender) if failed_lines else None
+        if failed_report is not None:
+            failed_mismatches = []
+            for i, (line, expected_id) in enumerate(zip(failed_lines, scheduled_ids), 1):
+                refs = line.get('evidence_ids') or []
+                if refs != [expected_id] or line.get('primary_evidence_id') != expected_id:
+                    failed_mismatches.append({'line': i, 'expected': expected_id,
+                                              'evidence_ids': refs,
+                                              'primary_evidence_id': line.get('primary_evidence_id')})
+            if len(failed_lines) != len(scheduled_ids):
+                failed_mismatches.append({'expected_lines': len(scheduled_ids),
+                                          'actual_lines': len(failed_lines)})
+            failed_report['evidence_schedule'] = {
+                'verdict': 'PASS' if not failed_mismatches else 'FAIL',
+                'mismatches': failed_mismatches,
+                'expected_ids': scheduled_ids,
+            }
+        (TASK / 'script.failed.json').write_text(json.dumps(
+            {'status': 'rejected_after_lint', 'attempts': 3, 'lines': failed_lines,
+             'last_lint': failed_report}, ensure_ascii=False, indent=2), encoding='utf-8')
+        print('[ERR] 三次生成均未通过质量门；仅保存 script.failed.json，不产生可供剪辑的 script.json', file=sys.stderr)
+        return 2
+
+    lines = script['lines']
+    report = lint_lines(lines, by_id, lo, hi, pov_gender)
+    final_schedule_mismatches = []
+    for i, (line, expected_id) in enumerate(zip(lines, scheduled_ids), 1):
+        refs = line.get('evidence_ids') or []
+        if refs != [expected_id] or line.get('primary_evidence_id') != expected_id:
+            final_schedule_mismatches.append({'line': i, 'expected': expected_id,
+                                              'evidence_ids': refs,
+                                              'primary_evidence_id': line.get('primary_evidence_id')})
+    if len(lines) != len(scheduled_ids):
+        final_schedule_mismatches.append({'expected_lines': len(scheduled_ids), 'actual_lines': len(lines)})
+    report['evidence_schedule'] = {'verdict': 'PASS' if not final_schedule_mismatches else 'FAIL',
+                                  'mismatches': final_schedule_mismatches,
+                                  'expected_ids': scheduled_ids}
+    texts = report.pop('texts')
+
+    out = {
+        'soul': soul_name, 'soul_source': SOULS[soul_name]['skill'],
+        'pov': pov,
+        'hook': chosen, 'budget_chars': budget, 'budget_range': [lo, hi],
+        'lines': lines, 'lint': report,
+        'soul_check_list': SOULS[soul_name]['check'],
+        'caveat': '口播稿由本地 VLM 生成，需人工审文案质量；ASR 证据绑定已核验，'
+                  '叙事一致性仍需人工判断',
+    }
+    (TASK / 'script.json').write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
+    (TASK / 'narration.txt').write_text('\n'.join(texts), encoding='utf-8')
+
+    print(json.dumps({'soul': soul_name, 'hook': chosen['text'],
+                      'lines': len(lines), 'chars': report['chars'],
+                      'estimated_sec': report['estimated_sec'],
+                      'in_budget': report['in_budget'],
+                      'no_evidence_lines': report['no_evidence']},
+                     ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

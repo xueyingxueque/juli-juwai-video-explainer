@@ -1,0 +1,175 @@
+{
+ "_note": "离线评估用例集（对标 skill-creator 的 evals/evals.json）。全部只读、不跑 GPU、不碰生产素材；断言必须客观可验证。eval_skill.py 逐条执行并生成 benchmark。新增断言必须同时改本文件与 CHECKS（eval_skill.py 会校验同步）。",
+ "version": 3,
+ "evals": [
+  {
+   "id": 1,
+   "name": "时长数值唯一源",
+   "assertion": "duration_bounds() 必须等于 [60, 300]",
+   "severity": "hard"
+  },
+  {
+   "id": 2,
+   "name": "时长严格区间",
+   "assertion": "实测 60/300 被拒，60.1/299.9 放行",
+   "severity": "hard"
+  },
+  {
+   "id": 3,
+   "name": "预估只预警",
+   "assertion": "check_estimate 越界返回 False 但不作为硬门",
+   "severity": "hard"
+  },
+  {
+   "id": 4,
+   "name": "四平台口径一致",
+   "assertion": "platform_profiles 的 duration 全等于 bounds；故意漂移时 policy 抛错（临时副本注入，正典零写入）",
+   "severity": "hard"
+  },
+  {
+   "id": 5,
+   "name": "跨集画面零重叠",
+   "assertion": "两集镜头交集为 0 时通过；出现 1 个重复镜头时被拒并报出 ep@秒桶",
+   "severity": "hard"
+  },
+  {
+   "id": 6,
+   "name": "去重对称分母",
+   "assertion": "长集复用短集镜头时，按较小集为分母仍能抓到（不被规模稀释）",
+   "severity": "hard"
+  },
+  {
+   "id": 7,
+   "name": "首集放行",
+   "assertion": "无历史 spec 时去重闸门直接通过",
+   "severity": "hard"
+  },
+  {
+   "id": 8,
+   "name": "读不到≠没有",
+   "assertion": "历史 spec 存在但损坏 → 保守拒绝；确实无历史 → 放行",
+   "severity": "hard"
+  },
+  {
+   "id": 9,
+   "name": "坑典编号连续",
+   "assertion": "正文 P01–Pnn 连续无跳号，且顶部索引行数等于条数",
+   "severity": "hard"
+  },
+  {
+   "id": 10,
+   "name": "引用完整性",
+   "assertion": "所有活跃文档（含坑典）引用的 scripts/references/config/evals 路径全部真实存在",
+   "severity": "hard"
+  },
+  {
+   "id": 11,
+   "name": "主文档体量",
+   "assertion": "SKILL.md 少于 500 行（渐进式披露）",
+   "severity": "soft"
+  },
+  {
+   "id": 12,
+   "name": "旧口径清零",
+   "assertion": "活跃脚本无 TIER_RANGE 定义、编排器不再向校验器传 --tier",
+   "severity": "hard"
+  },
+  {
+   "id": 13,
+   "name": "状态按实际产物",
+   "assertion": "ingest_ready() 数 _s1/ep* 目录，不认 bootstrapped 布尔标志",
+   "severity": "hard"
+  },
+  {
+   "id": 14,
+   "name": "十步状态机",
+   "assertion": "produce.STEPS 首位是 precheck、共 10 步且末位是 deliver",
+   "severity": "hard"
+  },
+  {
+   "id": 15,
+   "name": "TTS 敌对字符前移",
+   "assertion": "spec 含「——」时 spec_precheck 在秒级拒绝（临时目录用例）",
+   "severity": "hard"
+  },
+  {
+   "id": 16,
+   "name": "推进器幂等干跑",
+   "assertion": "auto_pilot.py --dry-run 返回 ok=true 且 actions 为空（不启动任何生产）",
+   "severity": "hard"
+  },
+  {
+   "id": 17,
+   "name": "单集时长合规",
+   "assertion": "已交付集实测时长全部通过 policy.check_measured（收口第 5 份口径）",
+   "severity": "soft"
+  },
+  {
+   "id": 18,
+   "name": "AI 标识元数据",
+   "assertion": "已交付封面版含 AIGC 隐式标识元数据",
+   "severity": "soft",
+   "note": "6 支历史成片已于 2026-11-11 补齐 comment/description 标准键隐式标识（P91）"
+  },
+  {
+   "id": 19,
+   "name": "配置契约审计",
+   "assertion": "contracts.py --audit 通过：配置与代码常量无漂移、关键脚本从配置取值",
+   "severity": "hard"
+  },
+  {
+   "id": 20,
+   "name": "学习闭环产物",
+   "assertion": "learn_from_runs.py 已产出 learning_report.json 且扫描到已交付集",
+   "severity": "hard"
+  },
+  {
+   "id": 21,
+   "name": "对外契约一致",
+   "assertion": "agent-integration.md / 说明文档.md 以 produce.py --pilot 为唯一主入口，不再把 pipeline.py run 写成「当前支持的调用方式」",
+   "severity": "hard"
+  },
+  {
+   "id": 22,
+   "name": "坑典结构可解析",
+   "assertion": "P80/P83/P84 有取代标注、补充段落为 #### 小标题、存在分类导航表",
+   "severity": "hard"
+  },
+  {
+   "id": 23,
+   "name": "AIGC 判据单一真相源",
+   "assertion": "aigc_values 只认标准键；自定义键被拒；读不到返回 unknown（非「确实没有」）；主链 produce.py 已接补标闸",
+   "severity": "hard"
+  },
+  {
+   "id": 24,
+   "name": "媒体质检防呆",
+   "assertion": "media_qc_policy 必填键齐全；freeze_start 正则可解析片尾冻结日志；工具失败返回 err（unknown 而非通过）",
+   "severity": "hard"
+  },
+  {
+   "id": 25,
+   "name": "画面实证 label 唯一",
+   "assertion": "多支成片位于同一目录（label 全撞车）时 _unique_labels 仍产出唯一标识，杜绝字典覆盖造成的假阴性",
+   "severity": "hard"
+  },
+  {
+   "id": 26,
+   "name": "发布物料法规落位",
+   "assertion": "显式标识落位为「起始画面+播放周边」、旧口径清零、6 类标签推荐正确；成片读不到时隐式标识记 unknown",
+   "severity": "hard"
+  },
+  {
+   "id": 27,
+   "name": "补标幂等且已接主链",
+   "assertion": "compliance.stamp 含幂等与唯一判据调用；produce.py 定义并调用 _ensure_aigc_stamp；不存在视频不得返回成功",
+   "severity": "hard"
+  },
+  {
+   "id": 28,
+   "name": "调研决策卡与存疑清单",
+   "assertion": "06 号正典含决策卡总表与存疑清单，含「禁止写进硬门」；配置显式落位已按法规原文修正",
+   "severity": "hard"
+  }
+ ]
+}

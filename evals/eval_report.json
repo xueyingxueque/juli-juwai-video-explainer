@@ -1,0 +1,332 @@
+{
+ "ts": "2026-11-19 19:45:20",
+ "skill_version": "7.1.0",
+ "total": 28,
+ "hard_pass": 25,
+ "hard_total": 25,
+ "soft_pass": 3,
+ "soft_total": 3,
+ "pass_rate": 1.0,
+ "ok": true,
+ "results": [
+  {
+   "id": 1,
+   "name": "时长数值唯一源",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "bounds=(60.0, 300.0)",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 2,
+   "name": "时长严格区间",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "[(59, False), (60, False), (60.1, True), (97.1, True), (299.9, True), (300, False), (301, False)]",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 3,
+   "name": "预估只预警",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "200s→True, 295s→False（均为 warn，非 reject）",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 4,
+   "name": "四平台口径一致",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "漂移平台={}；临时副本注入时断言抛错=True（正典未改动）",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 79
+  },
+  {
+   "id": 5,
+   "name": "跨集画面零重叠",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "干净=True 重复=False 报出具体镜头=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 3
+  },
+  {
+   "id": 6,
+   "name": "去重对称分母",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "被拦=True 比例=3/3 = 100.0%（上限 0%，分母取较小集） 重复镜头(源集@秒桶): 1@10s, 1@20s, 1@30s  → 这些画面已在前",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 3
+  },
+  {
+   "id": 7,
+   "name": "首集放行",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "首集放行=True 检查项=0",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 1
+  },
+  {
+   "id": 8,
+   "name": "读不到≠没有",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "损坏时拒绝=True fatal=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 2
+  },
+  {
+   "id": 9,
+   "name": "坑典编号连续",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "正文 1–P97 共97条 / 索引97行",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 1
+  },
+  {
+   "id": 10,
+   "name": "引用完整性",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "19 份活跃文档 / 59 个引用，缺失: []",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 8
+  },
+  {
+   "id": 11,
+   "name": "主文档体量",
+   "severity": "soft",
+   "passed": true,
+   "evidence": "SKILL.md 417 行（上限 500）",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 12,
+   "name": "旧口径清零",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "残留: 无",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 8
+  },
+  {
+   "id": 13,
+   "name": "状态按实际产物",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "10集→True 11集→False（无 bootstrapped 字段）",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 5
+  },
+  {
+   "id": 14,
+   "name": "十步状态机",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "10 步: ['precheck', 'evidence', 'assemble', 'bgm', 'gen', 'v37', 'build', 'qc', 'cover', 'deliver']",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 15,
+   "name": "TTS 敌对字符前移",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "rc=1 命中=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 115
+  },
+  {
+   "id": 16,
+   "name": "推进器幂等干跑",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "ok=True actions=0",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 3039
+  },
+  {
+   "id": 17,
+   "name": "单集时长合规",
+   "severity": "soft",
+   "passed": true,
+   "evidence": "检查 6 集，越界: []",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 270
+  },
+  {
+   "id": 18,
+   "name": "AI 标识元数据",
+   "severity": "soft",
+   "passed": true,
+   "evidence": "6 集中 6 集含 AIGC 隐式标识（判据=compliance.has_aigc_tag）",
+   "compliance_pending": false,
+   "note": "6 支历史成片已于 2026-11-11 补齐 comment/description 标准键隐式标识（P91）",
+   "ms": 278
+  },
+  {
+   "id": 19,
+   "name": "配置契约审计",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "契约审计: ✓ 一致",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 103
+  },
+  {
+   "id": 20,
+   "name": "学习闭环产物",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "扫描 51 集 / 风险簇 5 个",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 21,
+   "name": "对外契约一致",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "主入口一致，问题: 无",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  },
+  {
+   "id": 22,
+   "name": "坑典结构可解析",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "结构检查，问题: 无",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 2
+  },
+  {
+   "id": 23,
+   "name": "AIGC 判据单一真相源",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "标准键=True 自定义键拒=True 读不到=unknown:True 主链接入=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 20
+  },
+  {
+   "id": 24,
+   "name": "媒体质检防呆",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "配置=True 正则=True 片尾推算=True 工具失败=unknown:True 分类=True 保守=True 时间点=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 4
+  },
+  {
+   "id": 25,
+   "name": "画面实证 label 唯一",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "撞车→唯一=True 唯一→保持=True labels=['clip0', 'clip1', 'clip2']",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 3
+  },
+  {
+   "id": 26,
+   "name": "发布物料法规落位",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "落位=True 旧口径清零=True 标签=True 发布侧=True 读不到=unknown:True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 22
+  },
+  {
+   "id": 27,
+   "name": "补标幂等且已接主链",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "幂等+唯一判据=True 主链接入=True 缺文件拒绝=True 干跑守卫=True 干跑零副作用=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 32
+  },
+  {
+   "id": 28,
+   "name": "调研决策卡与存疑清单",
+   "severity": "hard",
+   "passed": true,
+   "evidence": "决策卡=True 存疑清单=True 勘误留痕=True 配置修正=True",
+   "compliance_pending": false,
+   "note": "",
+   "ms": 0
+  }
+ ],
+ "delta_vs_prev": 0.0,
+ "newly_passed_ids": [],
+ "newly_failed_ids": [],
+ "delta_scope": {
+  "common_ids": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21",
+   "22",
+   "23",
+   "24",
+   "25",
+   "26",
+   "27",
+   "28"
+  ],
+  "added_ids": [],
+  "removed_ids": [],
+  "total_changed": false,
+  "note": "仅同 id 集合可比；新增断言不计入 delta。newly_failed_ids 非空 = 本轮引入回归，优先修它。"
+ }
+}

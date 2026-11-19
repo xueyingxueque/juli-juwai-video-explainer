@@ -1,0 +1,34 @@
+# ── 本机私有配置（首次 setup 生成，绝不提交）──
+config/engine.json
+config/detected.json
+config/overrides.json
+
+# ── 本机状态与素材产物 ──
+__pycache__/
+*.pyc
+*.log
+*.tmp
+*.bak
+.bak_*
+.DS_Store
+out/
+data/
+models/
+assets/models/
+
+# ── 打包进仓库的关联技能里的缓存（代码本身保留）──
+vendors/**/__pycache__/
+vendors/**/.cache/
+vendors/**/venv/
+vendors/**/*.log
+
+# ── 编辑器的临时文件 ──
+*.swp
+.vscode/
+.idea/
+
+# ── 本机运行态数据（含本机路径/历史，不公开）──
+_tools/download_state.json
+_tools/dashboard/pilot_runs.jsonl
+_tools/dashboard/data.js
+_tools/dashboard/current.mp4
